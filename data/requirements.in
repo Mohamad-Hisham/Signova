@@ -1,0 +1,15 @@
+# Signova scaffold — documentation placeholder; no implementation.
+# Purpose: Reserve direct dependency intent for offline data engineering.
+# Owner: Basil.
+# Expected inputs: Owner-selected compatible versions after real runtime/tool verification.
+# Expected outputs: Comments only now; future reviewed direct requirements.
+# Responsibilities: Document pandas, NumPy, Pillow and audit/report tooling; FFmpeg/ffprobe
+#   executable and model-specific extractor only when approved; separate direct intent from a
+#   clean-environment tested lock.
+# Connections: Data scripts, receiver loaders, data reports and runtime parity recipes.
+# Future implementation: Select only required packages when implementation and compatibility
+#   checks are assigned.
+# Rules and limitations: Not an installable or tested environment; no package specifiers,
+#   constraints, downloads or installs in this scaffold.
+# Expected tests or acceptance: Future clean recreation and focused checks pass on recorded
+#   Python/platform/hardware before compatibility is claimed.

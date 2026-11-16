@@ -1,0 +1,15 @@
+# Signova scaffold — documentation placeholder; no implementation.
+# Purpose: Reserve a tested dependency lock for word reproducibility.
+# Owner: Bavly.
+# Expected inputs: Owner-selected compatible versions after real runtime/tool verification.
+# Expected outputs: Comments only now; future exact tested versions.
+# Responsibilities: Document Python/PyTorch, NumPy, approved MediaPipe or RGB/video extractor,
+#   scikit-learn and FFmpeg/ffprobe only when required; optional tested ONNX path; separate
+#   direct intent from a clean-environment tested lock.
+# Connections: Owner experiments and published runtime subset/compatibility handoff.
+# Future implementation: Generate and reproduce a real lock only during explicitly authorized
+#   implementation.
+# Rules and limitations: Not an installable or tested environment; no package specifiers,
+#   constraints, downloads or installs in this scaffold.
+# Expected tests or acceptance: Future clean recreation and focused checks pass on recorded
+#   Python/platform/hardware before compatibility is claimed.

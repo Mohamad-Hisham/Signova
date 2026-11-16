@@ -1,0 +1,15 @@
+# Signova scaffold — documentation placeholder; no implementation.
+# Purpose: Reserve direct dependency intent for the single backend runtime.
+# Owner: Ali.
+# Expected inputs: Owner-selected compatible versions after real runtime/tool verification.
+# Expected outputs: Comments only now; future reviewed direct requirements.
+# Responsibilities: Document Python 3.11 initial target; FastAPI, Pydantic v2, Uvicorn, NumPy,
+#   Pillow, Pytest, HTTPX, Ruff; settings tooling and only approved model runtimes; separate
+#   direct intent from a clean-environment tested lock.
+# Connections: config/startup, backend tests and both model-owner runtime agreements.
+# Future implementation: Select only required packages when implementation and compatibility
+#   checks are assigned.
+# Rules and limitations: Not an installable or tested environment; no package specifiers,
+#   constraints, downloads or installs in this scaffold.
+# Expected tests or acceptance: Future clean recreation and focused checks pass on recorded
+#   Python/platform/hardware before compatibility is claimed.

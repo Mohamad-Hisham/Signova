@@ -1,0 +1,14 @@
+# Signova scaffold — documentation placeholder; no implementation.
+# Purpose: Reserve a tested dependency lock for the single backend runtime.
+# Owner: Ali.
+# Expected inputs: Owner-selected compatible versions after real runtime/tool verification.
+# Expected outputs: Comments only now; future exact tested versions.
+# Responsibilities: Document both real inference dependencies coexisting with the agreed backend
+#   stack; separate direct intent from a clean-environment tested lock.
+# Connections: main lifecycle and model readiness acceptance.
+# Future implementation: Generate and reproduce a real lock only during explicitly authorized
+#   implementation.
+# Rules and limitations: Not an installable or tested environment; no package specifiers,
+#   constraints, downloads or installs in this scaffold.
+# Expected tests or acceptance: Future clean recreation and focused checks pass on recorded
+#   Python/platform/hardware before compatibility is claimed.

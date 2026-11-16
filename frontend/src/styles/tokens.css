@@ -1,0 +1,16 @@
+/*
+ * Signova scaffold — documentation placeholder; no implementation.
+ * Purpose: Reserve consistent accessible visual tokens for Signova UI.
+ * Owner: Adham.
+ * Expected inputs: Reviewed brand/layout/typography and contrast requirements.
+ * Expected outputs: Future reusable color/spacing/type/focus token declarations.
+ * Responsibilities: Support Arabic-capable typography, clear interactive states and readable
+ *   responsive layouts.
+ * Connections: global.css, shell, feature views and reusable components.
+ * Future implementation: Define CSS custom properties only after visual implementation is
+ *   assigned.
+ * Rules and limitations: Currently comments only; no invented design tokens copied as validated
+ *   accessibility evidence.
+ * Expected tests or acceptance: Chosen colors/font sizes are checked for readability and
+ *   contrast in actual implemented states.
+ */

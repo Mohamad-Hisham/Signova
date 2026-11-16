@@ -1,0 +1,15 @@
+# Signova scaffold — documentation placeholder; no implementation.
+# Purpose: Reserve a tested dependency lock for alphabet reproducibility.
+# Owner: Osama.
+# Expected inputs: Owner-selected compatible versions after real runtime/tool verification.
+# Expected outputs: Comments only now; future exact tested versions.
+# Responsibilities: Document Python/PyTorch/torchvision, NumPy, Pillow, scikit-learn and report
+#   tooling; optional evaluated MediaPipe/ONNX path; separate direct intent from a
+#   clean-environment tested lock.
+# Connections: Owner experiments and published runtime subset/compatibility handoff.
+# Future implementation: Generate and reproduce a real lock only during explicitly authorized
+#   implementation.
+# Rules and limitations: Not an installable or tested environment; no package specifiers,
+#   constraints, downloads or installs in this scaffold.
+# Expected tests or acceptance: Future clean recreation and focused checks pass on recorded
+#   Python/platform/hardware before compatibility is claimed.

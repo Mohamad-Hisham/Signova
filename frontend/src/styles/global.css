@@ -1,0 +1,15 @@
+/*
+ * Signova scaffold — documentation placeholder; no implementation.
+ * Purpose: Reserve global responsive, RTL/LTR, focus and plain-text layout behavior.
+ * Owner: Adham.
+ * Expected inputs: Approved tokens and semantic UI structure.
+ * Expected outputs: Future readable Arabic transcript/editor and responsive application layout.
+ * Responsibilities: Use logical spacing, visible focus, text wrapping and truthful video
+ *   presentation.
+ * Connections: tokens.css, App and all feature surfaces.
+ * Future implementation: Implement global baseline and directional styles during frontend work.
+ * Rules and limitations: Do not reverse stored strings, hide active camera state or style
+ *   transmission bytes; comments only now.
+ * Expected tests or acceptance: Mobile/portrait/200% zoom and mixed Arabic/Latin text stay
+ *   readable without clipping core controls.
+ */
