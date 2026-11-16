@@ -28,3 +28,12 @@ Frontend never imports backend Python, weights or ML/training code. Backend rout
 10. Add source review, exact starting-limit register, complete file catalogue/tree, scaffold verification, test acceptance READMEs and directory explanations. These provide traceability requested for beginner contributors. No extra service, database, Redis, container or deployment workflow is introduced.
 
 Python packaging names and build metadata remain future owner decisions within these boundaries; comment-only files are not claimed to be installable packages. Dependencies must be tested together for live inference before locks or runtime compatibility are asserted.
+
+## Later CI implementation
+
+The separately authorized CI task adds `.github/workflows/ci.yml`,
+`scripts/check_repository.py`, `tests/ci/` and the CI runbook. These are executable
+repository tooling and regression tests. Earlier scaffold-only statements describe the
+original application baseline. The checker accepts real Python syntax when application
+implementation is later assigned; it does not freeze source as comments. Application
+frontend/backend/model test suites are not yet available.

@@ -15,6 +15,7 @@ Scaffold verification and future setup, model promotion and integration acceptan
 
 | Entry | Purpose |
 |---|---|
+| [continuous-integration.md](continuous-integration.md) | CI behavior, local commands, hosted success/failure smoke tests and required-check setup. |
 | [integration-checklist.md](integration-checklist.md) | Future cross-module acceptance matrix separating software correctness, scientific evidence and current scaffold status. |
 | [local-development.md](local-development.md) | Honest non-runnable scaffold status and owner-led future environment/integration prerequisites. |
 | [model-release.md](model-release.md) | Complete versioned model promotion, fresh-runtime parity, live acceptance and coordinated rollback process. |

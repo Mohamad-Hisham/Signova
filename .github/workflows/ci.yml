@@ -1,0 +1,50 @@
+# Signova CI. Owner: Hisham; module owners review their future test jobs.
+# Check branch pushes, PR merge revisions, actual main updates and optional merge queues.
+# Application source remains a scaffold; these are repository and CI-tooling checks.
+name: Signova CI
+
+"on":
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+  merge_group:
+    branches: [main]
+    types: [checks_requested]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repository-checks:
+    name: Repository checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      # Keep the default ref: pull_request checks the merge result with main.
+      - name: Check out the revision under test
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+        with:
+          python-version: "3.11"
+
+      - name: Show the tested commit
+        run: git log -1 --format='%H %s'
+
+      - name: Test the repository checker
+        run: python3 -B -m unittest discover -s tests/ci -p 'test_*.py' -v
+
+      - name: Validate the repository
+        run: python3 -B scripts/check_repository.py

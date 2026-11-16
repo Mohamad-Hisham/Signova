@@ -1,6 +1,6 @@
 # Signova: start here
 
-Signova will recognize supported Arabic Sign Language letters and isolated words from a webcam and display Arabic and approved English equivalents. This repository currently contains architecture documents and comment-only source placeholders. It cannot run, build, infer, or train yet. No dependencies or usable lockfiles are installed or generated.
+Signova will recognize supported Arabic Sign Language letters and isolated words from a webcam and display Arabic and approved English equivalents. Application source is still a comment-only scaffold and cannot run, build, infer or train yet. Repository CI/checker tooling has been implemented under a later authorized task and needs no project dependencies. No application dependencies or usable application lockfiles have been installed or generated.
 
 The existing root README, license, five handbooks, and Excalidraw board are preserved byte for byte. This entry point provides the detailed onboarding that would normally live in the root README. The current workspace is already the repository root; no second nested `signova/` repository is created.
 
@@ -41,11 +41,11 @@ Active sessions and confirmed transcripts exist temporarily in backend RAM. The 
 | `ml/` | Independent alphabet/word training, evaluation, prediction and export placeholders; narrowly scoped shared documentation |
 | `data/` | Offline engineering metadata and script placeholders; ignored local payload areas |
 | `artifacts/` | Model-release requirements, cards and external release references; no weights or fake releases |
-| `tests/` | Future shared contract/integration acceptance descriptions and safe fixture policy |
-| `scripts/`, `.github/` | Future helper/CI responsibilities and pull-request template; no executable automation |
+| `tests/` | Implemented CI-tooling tests plus future shared contract/integration acceptance descriptions |
+| `scripts/`, `.github/` | Repository checker, GitHub Actions workflow and pull-request template |
 
 See the [complete repository tree](docs/architecture/repository-tree.md), [every-file catalogue](docs/architecture/file-catalog.md), [source review](docs/architecture/source-review.md), and [scaffold verification](docs/runbooks/scaffold-verification.md).
 
 Final project deadline: **December 1, 2026**. Weekly meeting: Tuesday, **10:00 PM or 11:00 PM Cairo time**, exact start TBD. Historical handbook schedules are planning references, not evidence of completed work. Hisham must reconcile conflicting intermediate dates.
 
-Implementation can begin only in a separately assigned implementation task. For this scaffold, review documents and static file structure; do not install packages, run application tests, build, deploy, commit or push.
+Application implementation requires a separately assigned task. Repository CI checks branch pushes, PR merge revisions targeting main and pushes to main after merging. Follow the [local checks and GitHub smoke tests](docs/runbooks/continuous-integration.md) before relying on the check. No application implementation, build, deployment, commit or push was performed by the CI authoring task.

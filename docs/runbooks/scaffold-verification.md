@@ -2,6 +2,11 @@
 
 Owner: Hisham. Static audit date: November 16, 2026. Status: **passed the scaffold checks below**. This is file/documentation verification, not an application test report, model evaluation, build or deployment.
 
+This is the historical initial-scaffold record. A later task implemented repository CI,
+its checker and CI-tooling tests. Counts and inactive-workflow statements below describe
+the original delivery. See the current [CI runbook](continuous-integration.md).
+Application source remains comment-only.
+
 | Requested verification | Result and evidence |
 |---|---|
 | Complete tree displayed and saved | The full project tree was printed during the task and saved in [repository-tree.md](../architecture/repository-tree.md). It includes all original references and new files; Git internals/workspace tool mounts are explicitly excluded. |

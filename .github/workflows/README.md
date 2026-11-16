@@ -1,22 +1,40 @@
-# .github/workflows
+# GitHub Actions workflows
 
-Owner: **Hisham with Adham/Ali/model-owner input**.
+Owner: **Hisham; affected module owners review future application test jobs**.
 
-README describing future CI responsibilities; no YAML workflow.
+Implemented repository checks; application modules remain scaffolds.
 
 | Boundary | Responsibility |
 |---|---|
-| Receives | Actual later package scripts, tested locks and safe acceptance suites. |
-| Produces | Future lint/type/unit/contract checks only when their implementation exists. |
-| Consumers and dependencies | Pull requests and maintainers. |
-| Never store here | Runnable workflows, meaningless empty test gates, model/data downloads or deployment credentials. |
+| Receives | Branch pushes, PRs into main, optional main merge groups and manual dispatch. |
+| Produces | The Repository checks job in the Signova CI workflow. |
+| Consumers and dependencies | Contributors, PR reviewers and main branch protection. |
+| Never store here | Secrets, user data, model binaries, dataset downloads or deployment credentials. |
 
 ## Directory contents
 
 | Entry | Purpose |
 |---|---|
+| [ci.yml](ci.yml) | Runs checker regression tests and repository validation with Python 3.11. |
 | `README.md` | This directory guide: owner, inputs/outputs, consumers, exclusions and child-file responsibilities. |
 
-## Future CI, currently inactive
+## Events and scope
 
-Only this README exists here. Add workflow YAML later when real frontend scripts, tested Python locks and meaningful suites exist. Possible checks include formatting/lint/type checking, focused unit/contract tests and synthetic integration; heavy scientific evaluation belongs in a reviewed model process. Never report empty suites as acceptance or download restricted data/weights automatically in public CI. No deploy/publish workflow is part of this task.
+`push` covers all branches, including main after merging. `pull_request` targets main and
+keeps checkout's default merge revision. `merge_group` supports a future merge queue.
+`workflow_dispatch` allows manual runs once this file reaches the default branch. Branch
+push and PR runs are separate; older runs for the same event/ref can be cancelled when
+a newer update arrives. There are no path filters that could skip a required check.
+
+The job uses read-only access, does not persist checkout credentials, and pins official
+checkout/setup-python actions to full hashes with release comments. No project dependencies
+are installed. Review action pin updates against their official releases.
+
+Current checks validate Python syntax without executing application modules, strict JSON,
+inline relative Markdown links, module guides, key ignore protections and tracked files
+that violate `.gitignore`. Checker regression tests run first. Frontend builds, Pytest,
+TypeScript checks, browser tests and model evaluation require real implementation, tested
+locks and meaningful suites. No empty application suite is reported as passing.
+
+See the [CI runbook](../../docs/runbooks/continuous-integration.md) for exact commands,
+GitHub success/failure tests and required-check setup.
