@@ -1,6 +1,6 @@
 # Complete file catalogue
 
-Owner: Hisham. Every new source placeholder is comment-only and has nine file-specific responsibility fields. JSON and editor/Git metadata are explicitly distinguished from code. Original files retain their original bytes. Directory READMEs describe each folder, its inputs/outputs, consumers and prohibited contents.
+Owner: Hisham. Application source placeholders remain comment-only with nine file-specific responsibility fields. The later CI task adds explicitly implemented repository tooling and tests, identified below. JSON and editor/Git metadata are explicitly distinguished from code. Original files retain their original bytes. Directory READMEs describe each folder, its inputs/outputs, consumers and prohibited contents.
 
 | File | Owner | Status | Purpose |
 |---|---|---|---|
@@ -8,6 +8,7 @@ Owner: Hisham. Every new source placeholder is comment-only and has nine file-sp
 | [.github/PULL_REQUEST_TEMPLATE.md](../../.github/PULL_REQUEST_TEMPLATE.md) | Hisham | documentation | PR review prompts for purpose, module, interfaces, dependencies, evidence, contract impact and reviewer. |
 | [.github/README.md](../../.github/README.md) | Hisham | documentation | Directory guide for .github: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [.github/workflows/README.md](../../.github/workflows/README.md) | Hisham with Adham/Ali/model-owner input | documentation | Directory guide for .github/workflows: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [.github/workflows/ci.yml](../../.github/workflows/ci.yml) | Hisham | implemented CI workflow | Read-only push, combined-main PR, post-merge, merge-group and manual repository checks. |
 | [.gitignore](../../.gitignore) | Hisham; Basil and model owners review content exceptions | Git safety configuration | Prevent secrets, local environments, restricted media, dataset payloads and large model artifacts entering Git. |
 | [AGENTS.md](../../AGENTS.md) | Hisham | documentation | Project-local contributor and agent boundaries, source priority and scaffold-only rules. |
 | [CONTRIBUTING.md](../../CONTRIBUTING.md) | Hisham | documentation | Simple contribution process, review duties and evidence rules for all six teammates. |
@@ -109,6 +110,7 @@ Owner: Hisham. Every new source placeholder is comment-only and has nine file-sp
 | [docs/datasets/data-governance.md](../../docs/datasets/data-governance.md) | Basil with Hisham, Ali, Adham and model-owner review | documentation | Separate storage domains, Git safety, authorized offline releases, live privacy and withdrawal responsibilities. |
 | [docs/datasets/source-register.md](../../docs/datasets/source-register.md) | Basil | documentation | Traceable but explicitly unverified candidate datasets from the board and the required source-audit fields. |
 | [docs/runbooks/README.md](../../docs/runbooks/README.md) | Hisham coordinates; module owners maintain their operational instructions | documentation | Directory guide for docs/runbooks: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [docs/runbooks/continuous-integration.md](../../docs/runbooks/continuous-integration.md) | Hisham | documentation | Local commands, event/revision behavior, hosted success/failure tests and main required-check setup. |
 | [docs/runbooks/integration-checklist.md](../../docs/runbooks/integration-checklist.md) | Hisham | documentation | Future cross-module acceptance matrix separating software correctness, scientific evidence and current scaffold status. |
 | [docs/runbooks/local-development.md](../../docs/runbooks/local-development.md) | Hisham with module owners | documentation | Honest non-runnable scaffold status and owner-led future environment/integration prerequisites. |
 | [docs/runbooks/model-release.md](../../docs/runbooks/model-release.md) | Ali, Osama and Bavly with Basil/Hisham acceptance | documentation | Complete versioned model promotion, fresh-runtime parity, live acceptance and coordinated rollback process. |
@@ -202,7 +204,10 @@ Owner: Hisham. Every new source placeholder is comment-only and has nine file-sp
 | [ml/words/src/train.py](../../ml/words/src/train.py) | Bavly | comment-only placeholder | Reserve offline word training and controlled validation checkpoint selection. |
 | [ml/words/tests/README.md](../../ml/words/tests/README.md) | Bavly | documentation | Directory guide for ml/words/tests: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [scripts/README.md](../../scripts/README.md) | Hisham; relevant module owner reviews future helpers | documentation | Directory guide for scripts: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [scripts/check_repository.py](../../scripts/check_repository.py) | Hisham | implemented CI tooling | Standard-library syntax, strict JSON, inline local link, module-guide and Git ignore validation. |
 | [tests/README.md](../../tests/README.md) | Hisham; producer/consumer owners supply acceptance evidence | documentation | Directory guide for tests: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [tests/ci/README.md](../../tests/ci/README.md) | Hisham | documentation | CI-tooling test ownership, synthetic inputs, invocation and excluded application/data scope. |
+| [tests/ci/test_repository_checks.py](../../tests/ci/test_repository_checks.py) | Hisham | implemented CI tooling tests | Regression tests for valid inputs, broken syntax/JSON/links and ignored-file handling in temporary Git checkouts. |
 | [tests/contracts/README.md](../../tests/contracts/README.md) | Hisham coordinates Ali/Adham and model/data owners | documentation | Directory guide for tests/contracts: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [tests/fixtures/README.md](../../tests/fixtures/README.md) | Hisham with Basil permission review and owning producer | documentation | Directory guide for tests/fixtures: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [tests/integration/README.md](../../tests/integration/README.md) | Hisham with Ali/Adham and model owners | documentation | Directory guide for tests/integration: contents, ownership, inputs, outputs, consumers and exclusions. |

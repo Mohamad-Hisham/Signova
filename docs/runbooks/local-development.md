@@ -6,6 +6,12 @@ For this scaffold, inspect [START-HERE](../../START-HERE.md), source placeholder
 
 ## Future owner-led implementation setup
 
+Repository CI tooling is implemented separately from the application scaffold. Run
+`python3 -B scripts/check_repository.py` and
+`python3 -B -m unittest discover -s tests/ci -p 'test_*.py' -v` without installing packages.
+See [continuous integration](continuous-integration.md) for hosted verification. The
+application startup/build/test restrictions above still describe the unimplemented app.
+
 After separate implementation authorization, Ali/model owners verify Python 3.11 compatibility against both actual inference runtimes in one backend process. Adham selects a maintained Node LTS compatible with the chosen Vite/test versions at implementation time. Each owner records tested dependencies and recreates its lock in a clean environment; training environments can remain independent. Do not claim compatibility from a successful install alone or run empty lockfiles as if reproducible.
 
 Frontend stack: React, TypeScript, Vite, native Fetch/WebSocket, Zod, Vitest, React Testing Library and Playwright. Backend stack: Python 3.11 initial target, FastAPI, Pydantic v2, Uvicorn, NumPy, Pillow, Pytest, HTTPX and Ruff; typed settings tooling and model runtime depend on tested requirements. OpenCV/MediaPipe are conditional model-recipe dependencies, not browser defaults. Model architectures/runtimes remain evidence-dependent.

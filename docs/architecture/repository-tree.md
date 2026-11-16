@@ -1,12 +1,13 @@
 # Complete repository tree
 
-Owner: Hisham. This is the complete project tree, including the preserved original README, license, five handbooks and board. Internal Git metadata and workspace-injected `.agents/`, `.aws/`, `.codex/` mounts are excluded; they are not project scaffold files. No existing user file is moved or overwritten. The current workspace is the repository root.
+Owner: Hisham. Current project tree including implemented repository CI, the application scaffold, and preserved original references. Git metadata and workspace tool mounts are excluded. The original README, license, five handbooks and Excalidraw remain unchanged; the CI task updates related guides. The current workspace is the repository root.
 
 ```text
 Signova/
 ├── .github/
 │   ├── workflows/
-│   │   └── README.md
+│   │   ├── README.md
+│   │   └── ci.yml
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── README.md
 ├── artifacts/
@@ -130,6 +131,7 @@ Signova/
 │   │   └── source-register.md
 │   ├── runbooks/
 │   │   ├── README.md
+│   │   ├── continuous-integration.md
 │   │   ├── integration-checklist.md
 │   │   ├── local-development.md
 │   │   ├── model-release.md
@@ -257,8 +259,12 @@ Signova/
 │   │   └── requirements.lock.txt
 │   └── README.md
 ├── scripts/
-│   └── README.md
+│   ├── README.md
+│   └── check_repository.py
 ├── tests/
+│   ├── ci/
+│   │   ├── README.md
+│   │   └── test_repository_checks.py
 │   ├── contracts/
 │   │   └── README.md
 │   ├── fixtures/
