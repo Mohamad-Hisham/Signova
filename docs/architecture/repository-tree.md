@@ -106,15 +106,11 @@ Signova/
 │   └── requirements.lock.txt
 ├── docs/
 │   ├── architecture/
-│   │   ├── decisions/
-│   │   │   ├── README.md
-│   │   │   └── open-questions.md
 │   │   ├── README.md
 │   │   ├── file-catalog.md
 │   │   ├── monorepo-structure.md
 │   │   ├── repository-tree.md
 │   │   ├── runtime-data-flow.md
-│   │   ├── source-review.md
 │   │   └── system-overview.md
 │   ├── contracts/
 │   │   ├── README.md
@@ -132,10 +128,7 @@ Signova/
 │   ├── runbooks/
 │   │   ├── README.md
 │   │   ├── continuous-integration.md
-│   │   ├── integration-checklist.md
-│   │   ├── local-development.md
-│   │   ├── model-release.md
-│   │   └── scaffold-verification.md
+│   │   └── integration-checklist.md
 │   ├── team/
 │   │   ├── README.md
 │   │   ├── git-workflow.md
@@ -274,7 +267,6 @@ Signova/
 │   └── README.md
 ├── .editorconfig
 ├── .gitignore
-├── AGENTS.md
 ├── CONTRIBUTING.md
 ├── LICENSE
 ├── README.md

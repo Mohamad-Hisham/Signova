@@ -2,7 +2,7 @@
 
 Owner: Hisham; inputs: owner updates, reviewed artifacts and unresolved decision IDs; outputs: named decisions/actions and evidence reviewed by all six. Never store credentials, private transcripts or restricted media in meeting notes.
 
-Final delivery: **Tuesday, December 1, 2026**. Weekly team meeting: **Tuesday at either 10:00 PM or 11:00 PM Cairo time (Africa/Cairo)**. The start time is TBD; Hisham must confirm it (Q12). No calendar invitation, automation or recurring event is created. Upcoming Tuesday dates in this planning period are November 17, November 24 and December 1; they are possible team checkpoints, not confirmed timed meetings.
+Final delivery: **Tuesday, December 1, 2026**. Weekly team meeting: **Tuesday at either 10:00 PM or 11:00 PM Cairo time (Africa/Cairo)**. The start time is TBD; Hisham must confirm it. No calendar invitation, automation or recurring event is created. Upcoming Tuesday dates in this planning period are November 17, November 24 and December 1; they are possible team checkpoints, not confirmed timed meetings.
 
 Suggested agenda: short done/next/blocked updates; one reproducible artifact and failure per affected module; cross-module handoff review; explicit decisions and owners; next evidence/date. Ali and Adham's handbooks recommend a brief daily integration check; Basil/model owners need data/parity reviews as prerequisites change. These are work agreements, not independently scheduled meetings.
 

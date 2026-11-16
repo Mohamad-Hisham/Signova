@@ -1,6 +1,6 @@
 # Signova REST API v1
 
-Owner: Ali; consumer/reviewer: Adham; Hisham coordinates changes. Source: Ali §§7/11–14/25–26 and Appendices A–B; Adham §§14–15/19/21–25 and Appendix A. This is a transcription of the agreed handbook contract, not a generated API or running implementation. No alternative routes or English translation fields are introduced. See [open questions](../architecture/decisions/open-questions.md) for missing decisions.
+Owner: Ali; consumer/reviewer: Adham; Hisham coordinates changes. Source: Ali §§7/11–14/25–26 and Appendices A–B; Adham §§14–15/19/21–25 and Appendix A. This is a transcription of the agreed handbook contract, not a generated API or running implementation. No alternative routes or English translation fields are introduced. Unresolved contract details require agreement between Ali, Adham and Hisham before implementation.
 
 All paths below include **`/api/v1`**. JSON is UTF-8. Public modes: `word` and `alphabet`. Unknown request fields are rejected. Session IDs, stream IDs and item IDs below are server-issued; shortened example IDs are illustrative. Real session/stream IDs use UUIDs and a separately generated random secret.
 

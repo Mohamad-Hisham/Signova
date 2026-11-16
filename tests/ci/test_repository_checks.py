@@ -106,13 +106,14 @@ class RepositoryChecksTests(unittest.TestCase):
         self.assertTrue(any("required repository file" in item for item in failures))
         self.assertTrue(any("ignore protection" in item for item in failures))
 
-    def test_complete_synthetic_checkout_passes_then_broken_json_fails(self):
+    def test_checkout_without_optional_agents_file_passes_then_broken_json_fails(self):
         self.init_git()
         for relative in REQUIRED_FILES:
             self.write(relative, "{}" if relative.endswith(".json") else "# Synthetic\n")
         for module in MODULES:
             self.write(f"{module}/README.md", "# Synthetic module guide\n")
         self.write(".gitignore", "\n".join(IGNORE_PROBES) + "\n")
+        self.assertFalse((self.root / "AGENTS.md").exists())
         self.assertEqual(check_repository(self.root)[0], [])
         self.write("bad.json", "{broken}")
         self.assertTrue(any("invalid JSON" in item for item in check_repository(self.root)[0]))

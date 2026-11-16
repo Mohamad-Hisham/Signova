@@ -23,4 +23,4 @@ Safe model-release descriptions, model-specific templates and future immutable e
 
 This directory contains only model-release policy/templates and future safe references, not a storage backend or real release. No fake weight, manifest.json, labels.json, checksum value or approved model version is supplied. Each future reference ties actual immutable model/data/split/labels/recipe/policy versions and hashes to an external approved package.
 
-Do not require identical filenames across model owners; declare real paths in each manifest. Ali verifies checksums/runtimes, loads once and runs warmup/golden checks before marking a mode ready. Large binaries and restricted fixtures remain outside ordinary Git. See `../docs/runbooks/model-release.md`.
+Do not require identical filenames across model owners; declare real paths in each manifest. Ali verifies checksums/runtimes, loads once and runs warmup/golden checks before marking a mode ready. Large binaries and restricted fixtures remain outside ordinary Git. See the [model interface and release contract](../docs/contracts/model-interface.md).

@@ -15,9 +15,9 @@ Shared architecture, contracts, team agreements, data policy and runbooks.
 
 | Entry | Purpose |
 |---|---|
-| [architecture/](architecture/README.md) | System diagrams, runtime flow, layout/file inventory and source review. |
+| [architecture/](architecture/README.md) | System diagrams, runtime flow and the repository layout/file inventory. |
 | [contracts/](contracts/README.md) | Central REST, WebSocket, adapter, data, vocabulary and UI behavior specifications. |
 | [datasets/](datasets/README.md) | Candidate source links and engineering governance policy. |
-| [runbooks/](runbooks/README.md) | Scaffold verification and future setup, model promotion and integration acceptance. |
+| [runbooks/](runbooks/README.md) | Continuous integration guidance and application integration acceptance. |
 | [team/](team/README.md) | Ownership, receiver handoffs, Git workflow and meeting rhythm. |
 | `README.md` | This directory guide: owner, inputs/outputs, consumers, exclusions and child-file responsibilities. |
