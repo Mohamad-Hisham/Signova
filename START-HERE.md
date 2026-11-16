@@ -6,7 +6,7 @@ The existing root README, license, five handbooks, and Excalidraw board are pres
 
 ## Start with the contracts
 
-Read [the system overview](docs/architecture/system-overview.md), [runtime flows](docs/architecture/runtime-data-flow.md), [ownership](docs/team/ownership.md), and [open decisions](docs/architecture/decisions/open-questions.md). Then read your module README and the relevant contracts under [docs/contracts](docs/contracts/README.md).
+Read [the system overview](docs/architecture/system-overview.md), [runtime flows](docs/architecture/runtime-data-flow.md), and [ownership](docs/team/ownership.md). Then read your module README and the relevant contracts under [docs/contracts](docs/contracts/README.md). Coordinate unresolved interface or scope decisions with Hisham and the affected owners.
 
 One React/TypeScript/Vite frontend communicates through native Fetch and WebSocket with one Python 3.11-target FastAPI backend. The backend loads independent alphabet and word packages through dedicated adapters. Basil's offline data releases feed the two model owners; approved versioned model releases reach Ali through external artifact storage. These are modules in one monorepo, not microservices.
 
@@ -44,7 +44,7 @@ Active sessions and confirmed transcripts exist temporarily in backend RAM. The 
 | `tests/` | Implemented CI-tooling tests plus future shared contract/integration acceptance descriptions |
 | `scripts/`, `.github/` | Repository checker, GitHub Actions workflow and pull-request template |
 
-See the [complete repository tree](docs/architecture/repository-tree.md), [every-file catalogue](docs/architecture/file-catalog.md), [source review](docs/architecture/source-review.md), and [scaffold verification](docs/runbooks/scaffold-verification.md).
+See the [complete repository tree](docs/architecture/repository-tree.md), [every-file catalogue](docs/architecture/file-catalog.md), and [integration checklist](docs/runbooks/integration-checklist.md).
 
 Final project deadline: **December 1, 2026**. Weekly meeting: Tuesday, **10:00 PM or 11:00 PM Cairo time**, exact start TBD. Historical handbook schedules are planning references, not evidence of completed work. Hisham must reconcile conflicting intermediate dates.
 

@@ -52,7 +52,7 @@ sequenceDiagram
   live-->>ui: transcript.updated for the same commit
 ```
 
-REST and socket responses may arrive in either order. The frontend independently merges `transcript.revision` for text and `state_version` for capture state; `event_seq` orders socket events. It also checks session identity, local connection generation and deletion barriers. A cached success resolves a pending command without rolling the display back. Deadline-only updates at equal versions need the explicit ordering decision in [open questions](decisions/open-questions.md).
+REST and socket responses may arrive in either order. The frontend independently merges `transcript.revision` for text and `state_version` for capture state; `event_seq` orders socket events. It also checks session identity, local connection generation and deletion barriers. A cached success resolves a pending command without rolling the display back. Ali and Adham must agree how to order deadline-only updates at equal versions before implementing that behavior.
 
 ## Transcript lifecycle
 

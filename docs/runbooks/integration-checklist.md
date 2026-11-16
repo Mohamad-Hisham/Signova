@@ -1,6 +1,6 @@
 # Integration acceptance checklist
 
-Owner: Hisham; implementation evidence from the named module owners. This is a future acceptance plan, **not a record of passing application tests**. Current scaffold verification is separate. Mark items complete only with actual versions, hardware/browser, fixtures, results, responsible reviewer and date.
+Owner: Hisham; implementation evidence from the named module owners. This is a future acceptance plan, **not a record of passing application tests**. Mark items complete only with actual versions, hardware/browser, fixtures, results, responsible reviewer and date.
 
 | Area | Acceptance evidence | Owners |
 |---|---|---|

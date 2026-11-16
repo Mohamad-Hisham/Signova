@@ -1,6 +1,6 @@
 # Signova system overview
 
-Status: architecture specification and scaffold, November 16, 2026. Owner: Hisham; technical review by all module owners. See [source review](source-review.md) for the five handbooks and board evidence, and [open questions](decisions/open-questions.md) for decisions still needed. This document describes intended behavior, not an implemented system or measured capability.
+Status: architecture specification and scaffold, November 16, 2026. Owner: Hisham; technical review by all module owners. The five engineering handbooks and the current project instructions supply the technical requirements. Coordinate pending decisions with Hisham and affected owners. This document describes intended behavior, not an implemented system or measured capability.
 
 ## System context
 

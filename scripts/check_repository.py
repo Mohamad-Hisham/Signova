@@ -23,7 +23,7 @@ from urllib.parse import unquote, urlsplit
 
 
 REQUIRED_FILES = (
-    "AGENTS.md", "START-HERE.md", ".gitignore", "frontend/package.json",
+    "START-HERE.md", ".gitignore", "frontend/package.json",
     ".github/workflows/ci.yml", "tests/ci/test_repository_checks.py",
 )
 MODULES = (
