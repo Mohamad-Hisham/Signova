@@ -1,0 +1,20 @@
+{
+  "experiment_id": "aasl31_full_frame_baseline_v1",
+  "training_reference": {
+    "file": "Untitled13.ipynb",
+    "sha256": "1d9ac118cba4ff6e6cef68df0ccd62fc40d77a221e341edac25d14d5ff0e3281"
+  },
+  "checkpoint": {
+    "file": "aasl31_best.pth",
+    "sha256": "5bc685f101ac1824130cec43af76ccc62f848572b94924cec617b101d31e5e5f"
+  },
+  "dataset_id": "muhammadalbrham/rgb-arabic-alphabets-sign-language-dataset",
+  "evidence_files": [
+    "manifest.csv",
+    "test_classification_report.csv",
+    "test_confusion_matrix.png",
+    "test_confusion_matrix_counts.csv",
+    "training_curves.png",
+    "training_history.csv"
+  ]
+}

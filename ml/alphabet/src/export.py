@@ -14,3 +14,4 @@
 #   padding/length changes, fake manifests or in-place release replacement.
 # Expected tests or acceptance: Future runtime warmup/golden/full decision parity, target
 #   hardware latency/memory and immutable file hashes pass before promotion.
+# delete

@@ -1,0 +1,93 @@
+experiment:
+  id: aasl31_full_frame_baseline_v1
+  status: executed_baseline
+  checkpoint_selection: best_validation_macro_f1
+  selected_epoch: 11
+
+dataset:
+  source: muhammadalbrham/rgb-arabic-alphabets-sign-language-dataset
+  retrieval: kagglehub
+  version: unpinned
+  license: CC-BY-SA-4.0
+  image_count: 7856
+  class_count: 31
+  class_mapping: stored_in_checkpoint
+
+split:
+  method: grouped_by_filename_numeric_suffix
+  random_state: 42
+  group_is_confirmed_signer_id: false
+  images:
+    train: 5456
+    validation: 1173
+    test: 1227
+  group_overlap_between_splits: 0
+
+model:
+  architecture: torchvision.mobilenet_v3_small
+  pretrained_weights: MobileNet_V3_Small_Weights.DEFAULT
+  input:
+    color: RGB
+    shape: [N, 3, 224, 224]
+    dtype: float32
+    normalization:
+      mean: [0.485, 0.456, 0.406]
+      std: [0.229, 0.224, 0.225]
+  output:
+    type: logits
+    shape: [N, 31]
+
+training:
+  epochs: 12
+  batch_size: 32
+  optimizer: AdamW
+  learning_rate: 0.0001
+  loss: class_weighted_cross_entropy
+  class_weight_formula: total_images / (class_count * class_images)
+  augmentation_train_only:
+    random_rotation_degrees: 8
+    brightness_jitter: 0.15
+    contrast_jitter: 0.15
+  split_seed: 42
+  training_seed: not_recorded
+  hardware: Tesla_T4
+
+evaluation:
+  validation:
+    best_macro_f1: 0.9336
+    best_epoch: 11
+  test:
+    image_count: 1227
+    accuracy: 0.9324
+    balanced_accuracy: 0.9307
+    macro_f1: 0.9300
+  split_note: >
+    Groups are separated by filename number. The notebook does not verify
+    that this number identifies a signer.
+
+decision_policy:
+  status: experimental_full_frame_only
+  score_threshold: 0.89
+  margin_threshold: 0.0
+  validation:
+    accepted_precision_observed: 0.9802
+    accepted_images: 1009
+    coverage: 0.86
+  caveat: >
+    Threshold was selected on validation data also used for checkpoint
+    selection. It is not a verified live-camera confidence threshold.
+
+capabilities:
+  hand_detection: not_integrated_with_this_checkpoint
+  unknown_sign_rejection: not_validated
+  neutral_sign_detection: not_supported
+
+provenance:
+  training_reference: Untitled13.ipynb
+  training_reference_sha256: 1d9ac118cba4ff6e6cef68df0ccd62fc40d77a221e341edac25d14d5ff0e3281
+  checkpoint_path: checkpoints/aasl31_best.pth
+  checkpoint_sha256: 5bc685f101ac1824130cec43af76ccc62f848572b94924cec617b101d31e5e5f
+  checkpoint_git_policy: locally_present_but_ignored_do_not_force_add
+  class_map_path: checkpoints/class_to_idx.json
+  class_map_sha256: 0fb4f58ca760ae2f0542c59aa62430ab69aab2c6de796429b3982f9d2e9cfe9a
+

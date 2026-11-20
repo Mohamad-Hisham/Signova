@@ -1,0 +1,5 @@
+# Optional dependencies for src/webcam_experiment.py; not a tested lock.
+# MediaPipe installs an OpenCV distribution providing cv2. In a clean venv,
+# do not separately install opencv-python alongside opencv-contrib-python.
+mediapipe
+numpy

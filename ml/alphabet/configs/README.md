@@ -2,21 +2,8 @@
 
 Owner: **Osama**.
 
-Future training, deterministic preprocessing and rejection/capability recipe specifications.
+This directory contains the recorded `aasl31_full_frame_baseline.yaml` recipe for the executed Colab experiment. Values are transcribed from the notebook/config evidence and are not generic defaults.
 
-| Boundary | Responsibility |
-|---|---|
-| Receives | Approved task, data/split versions and measured validation choices. |
-| Produces | Future reproducible owner-specific recipes; currently Markdown guidance only. |
-| Consumers and dependencies | dataset.py, train.py, predict.py, evaluate.py and release manifest. |
-| Never store here | Fabricated feature dimensions, tutorial values presented as approved defaults, secrets or user payloads. |
+The split is grouped by the numeric suffix in filenames with seed 42. The notebook verifies no group overlap, but does not establish that a numeric group identifies one signer. The decision threshold is experimental and was measured on the same validation split used for checkpoint selection; it is not a calibrated confidence score or a validated webcam policy.
 
-## Directory contents
-
-| Entry | Purpose |
-|---|---|
-| `README.md` | This directory guide: owner, inputs/outputs, consumers, exclusions and child-file responsibilities. |
-
-## Configuration status
-
-Actual architecture/hyperparameters, tensor shapes, class count, input/decision/calibration/neutral policy and runtime settings are TBD, not adopted from tutorial values. Describe planned schemas/units/version lineage here; create real configuration only after the task/input contract is approved. Train-only stochastic augmentation is separate from deterministic evaluation/runtime preprocessing. Never fit policy/normalization from final test data.
+Do not put credentials, participant identities, raw images or unsupported claims here. Update the configuration only when an actual run changes the recipe, with its run/artifact lineage.
