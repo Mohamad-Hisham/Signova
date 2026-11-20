@@ -1,17 +1,35 @@
-# Signova scaffold — documentation placeholder; no implementation.
-# Purpose: Reserve the exact deterministic alphabet training-evaluation-serving input recipe.
-# Owner: Osama.
-# Expected inputs: Validated oriented RGB samples or owner-approved features plus approved
-#   single-image or sequence context.
-# Expected outputs: Future tensor/features of documented names, dtype, axes, range and numerical
-#   tolerances.
-# Responsibilities: Make color/orientation/crop/pad/resize/scaling/extractor behavior explicit;
-#   preserve full required hand/body context and approved handedness distinctions.
-# Connections: Basil offline recipe, dataset.py, predict.py, configs and Ali dedicated adapter
-#   parity checks.
-# Future implementation: Implement owner-local recipe first; extract genuinely identical
-#   utilities to ml/common only with both model owners review.
-# Rules and limitations: No guessed dimensions, double normalization, routine mirroring,
-#   test-fitted parameters or feature-version substitution.
-# Expected tests or acceptance: Same permitted fixture matches offline/runtime intermediates
-#   within declared tolerance; portrait/context/gap/missing evidence cases explicit.
+"""Deterministic and train-only transforms for the AASL31 baseline."""
+
+from PIL import Image
+from torchvision import transforms
+
+IMAGE_SIZE = (224, 224)
+IMAGENET_MEAN = (0.485, 0.456, 0.406)
+IMAGENET_STD = (0.229, 0.224, 0.225)
+
+
+def build_eval_transform():
+    """Deterministic RGB resize/tensor/normalization used in val/test/serving."""
+    return transforms.Compose([
+        transforms.Resize(IMAGE_SIZE),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+    ])
+
+
+def build_train_transform(rotation_degrees=8, brightness=0.15, contrast=0.15):
+    """Notebook training transform; stochastic augmentation is train-only."""
+    return transforms.Compose([
+        transforms.Resize(IMAGE_SIZE),
+        transforms.RandomRotation(rotation_degrees),
+        transforms.ColorJitter(brightness=brightness, contrast=contrast),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+    ])
+
+
+def as_rgb(image: Image.Image) -> Image.Image:
+    """Convert a PIL image to RGB, matching the notebook loader."""
+    if not isinstance(image, Image.Image):
+        raise TypeError("image must be a PIL.Image.Image")
+    return image.convert("RGB")

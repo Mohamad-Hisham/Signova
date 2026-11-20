@@ -2,25 +2,15 @@
 
 Owner: **Osama**.
 
-Comment-only dataset, model, training, evaluation, prediction, export, preprocessing and decision modules.
+- `dataset.py`: KaggleHub download helper, folder audit, numeric-suffix grouped manifest creation and RGB image loading.
+- `model.py`: construct the MobileNetV3-Small model used by the experiment.
+- `preprocessing.py`: exact deterministic evaluation/inference transform and train-only augmentation.
+- `train.py`: refactored training loop with class-weighted cross entropy and best-validation-Macro-F1 checkpoint selection.
+- `evaluate.py`: frozen-checkpoint test metrics, per-class report and confusion evidence.
+- `decision.py`: validation probability collection and the notebook's exploratory threshold search; not a calibrated policy.
+- `audit_hand_detection.py`: notebook-style per-class MediaPipe hand-detection sample audit; not letter recognition accuracy.
+- `predict.py`: side-effect-free single-image predictor.
+- `webcam_experiment.py`: MediaPipe hand detection/cropping webcam script, explicitly unvalidated.
+- `export.py`: release/export flow remains a scaffold; no production release is approved.
 
-| Boundary | Responsibility |
-|---|---|
-| Receives | Frozen dataset/mapping/recipe plus explicitly assigned future implementation. |
-| Produces | Future scientific pipeline and side-effect-free inference package. |
-| Consumers and dependencies | Owner tests/reports, artifact release and Ali adapter. |
-| Never store here | Inference imports of training entrypoints, transcript writes, live collection or model binaries. |
-
-## Directory contents
-
-| Entry | Purpose |
-|---|---|
-| [dataset.py](dataset.py) | Reserve the alphabet model-specific loader for Basil approved immutable releases. |
-| [decision.py](decision.py) | Reserve the alphabet classifier rejection/calibration and neutral-capability policy. |
-| [evaluate.py](evaluate.py) | Reserve alphabet scientific evaluation, rejection coverage and target-runtime benchmarks. |
-| [export.py](export.py) | Reserve optional alphabet inference export and complete versioned package assembly. |
-| [model.py](model.py) | Reserve the independent alphabet model architecture definition used by training and inference. |
-| [predict.py](predict.py) | Reserve side-effect-free alphabet inference from a trusted frozen release. |
-| [preprocessing.py](preprocessing.py) | Reserve the exact deterministic alphabet training-evaluation-serving input recipe. |
-| [train.py](train.py) | Reserve offline alphabet training and controlled validation checkpoint selection. |
-| `README.md` | This directory guide: owner, inputs/outputs, consumers, exclusions and child-file responsibilities. |
+The scripts mirror the executed notebook recipe, but the notebook remains the source of the historical results. The refactored scripts have not been rerun to reproduce the recorded scores. The webcam script accesses the camera and must not be confused with the full-frame test evaluation.
