@@ -7,10 +7,10 @@
 
 - **Experiment/version:** `aasl31_full_frame_baseline_v1`
 - **Architecture:** torchvision MobileNetV3-Small, initialized from `MobileNet_V3_Small_Weights.DEFAULT`, with a 31-class output layer.
-- **Checkpoint:** local file `../../checkpoints/aasl31_best.pth`; SHA-256 `5bc685f101ac1824130cec43af76ccc62f848572b94924cec617b101d31e5e5f`. The checkpoint is ignored by Git under repository policy.
+- **Checkpoint:** local-only file `checkpoints/aasl31_best.pth` (excluded from Git); SHA-256 `5bc685f101ac1824130cec43af76ccc62f848572b94924cec617b101d31e5e5f`. The checkpoint is ignored by Git under repository policy.
 - **Intended scope:** classify one static RGB image into one of the 31 dataset labels as a graduation-project prototype.
 - **Out of scope:** continuous sign-language translation, words/sentences, temporal signs, neutral/unknown-sign detection, guaranteed signer-independent operation, and production accessibility claims.
-- **Exact class order:** recorded in [`../../checkpoints/class_to_idx.json`](../../checkpoints/class_to_idx.json).
+- **Exact class order:** recorded in local-only file `checkpoints/class_to_idx.json` (excluded from Git).
 
 ## Input, preprocessing and output
 
