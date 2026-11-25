@@ -13,3 +13,16 @@
 #   constraints, downloads or installs in this scaffold.
 # Expected tests or acceptance: Future clean recreation and focused checks pass on recorded
 #   Python/platform/hardware before compatibility is claimed.
+
+
+fastapi
+uvicorn[standard]
+pydantic>=2,<3
+pydantic-settings>=2,<3
+numpy
+pillow
+pytest
+pytest-asyncio
+httpx
+ruff
+pip-tools

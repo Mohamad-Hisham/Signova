@@ -12,3 +12,75 @@
 #   mode changes or empty bodies on no-body routes.
 # Expected tests or acceptance: Missing/extra fields, duplicate/foreign IDs and malformed
 #   revisions return safe 422 before mutation; valid stale revisions use 409.
+
+
+from typing import Annotated, Literal
+from unicodedata import normalize
+
+from pydantic import (
+    BaseModel,
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    StrictInt,
+)
+
+NFCText = Annotated[
+    str,
+    BeforeValidator(lambda value: normalize("NFC", value)),
+    Field(min_length=1, max_length=2000),
+]
+
+
+class ConfiguredModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class SessionCreateRequest(ConfiguredModel):
+    mode: Literal["alphabet", "word"]
+    recovery_enabled: bool = False
+
+
+class CaptureRequest(ConfiguredModel):
+    expected_revision: StrictInt = Field(ge=0)
+    expected_state_version: StrictInt = Field(ge=0)
+    action: Literal["start", "pause"]
+
+
+class ConfirmRequest(ConfiguredModel):
+    expected_revision: StrictInt = Field(ge=0)
+    candidate_id: str = Field(min_length=1)
+    stream_id: str = Field(min_length=1)
+
+
+class SpaceRequest(ConfiguredModel):
+    expected_revision: StrictInt = Field(ge=0)
+
+
+class TranscriptReplacementItem(ConfiguredModel):
+    item_id: str | None = None
+    text: NFCText
+
+
+class TranscriptReplaceRequest(ConfiguredModel):
+    expected_revision: StrictInt = Field(ge=0)
+    items: list[TranscriptReplacementItem] = Field(
+        max_length=2000,
+    )
+
+
+class TranscriptClearRequest(ConfiguredModel):
+    expected_revision: StrictInt = Field(ge=0)
+
+
+class EndRequest(ConfiguredModel):
+    expected_revision: StrictInt = Field(ge=0)
+
+
+class VocabularyQuery(ConfiguredModel):
+    mode: Literal["alphabet", "word"]
+
+
+class ExportQuery(ConfiguredModel):
+    format: Literal["txt"]
+    revision: StrictInt = Field(ge=0)
