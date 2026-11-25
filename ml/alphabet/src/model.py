@@ -1,17 +1,14 @@
-# Signova scaffold — documentation placeholder; no implementation.
-# Purpose: Reserve the independent alphabet model architecture definition used by training and
-#   inference.
-# Owner: Osama.
-# Expected inputs: Approved task/class map, representation contract and owner experiment
-#   configuration.
-# Expected outputs: Future model structure and declared output semantics matching immutable
-#   checkpoint/export.
-# Responsibilities: Keep architecture construction separate from training entrypoints; choose
-#   static/temporal architecture from reviewed class distinctions and evidence.
-# Connections: dataset.py, train.py, predict.py, export.py and owner requirements/configs.
-# Future implementation: Define the smallest evidence-supported architecture after
-#   baseline/input review; no architecture is chosen by this scaffold.
-# Rules and limitations: No weights, imports, layers or classifier now; do not combine
-#   alphabet/word classes or hardcode illustrative dimensions.
-# Expected tests or acceptance: Future checkpoint reload matches exact architecture/output
-#   count; shape/finite tests and runtime parity independent of training execution.
+"""MobileNetV3-Small architecture used by the AASL31 baseline."""
+
+from torch import nn
+from torchvision.models import MobileNet_V3_Small_Weights, mobilenet_v3_small
+
+
+def build_model(num_classes: int, pretrained: bool = False):
+    """Build the trained architecture; optionally initialize ImageNet weights."""
+    if not isinstance(num_classes, int) or num_classes < 1:
+        raise ValueError("num_classes must be a positive integer")
+    weights = MobileNet_V3_Small_Weights.DEFAULT if pretrained else None
+    model = mobilenet_v3_small(weights=weights)
+    model.classifier[3] = nn.Linear(model.classifier[3].in_features, num_classes)
+    return model

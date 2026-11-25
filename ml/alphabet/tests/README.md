@@ -2,21 +2,14 @@
 
 Owner: **Osama**.
 
-Future loader, preprocessing, rejection, golden, parity and mode-specific acceptance.
+No automated acceptance tests have been implemented or run for this baseline yet. Keep software checks separate from held-out recognition evaluation.
 
-| Boundary | Responsibility |
-|---|---|
-| Receives | Synthetic numeric cases and later permitted versioned golden inputs. |
-| Produces | Future software/numerical evidence separate from held-out scientific evaluation. |
-| Consumers and dependencies | Model package reviews and backend model acceptance. |
-| Never store here | Application tests in this scaffold, private recordings or synthetic tensors claimed as recognition accuracy. |
+## Planned acceptance evidence
 
-## Directory contents
+- Check checkpoint/class-map count and contiguous indices.
+- Check RGB conversion, deterministic 224×224 preprocessing, output shape and finite logits.
+- Check a permitted golden fixture and CPU/GPU parity tolerances.
+- For any rejection policy, measure coverage, accepted precision and false accepts on separate approved data.
+- For live use, evaluate hand detection/cropping, no-hand/no-result behavior, static versus temporal classes, held/repeated letters, and runtime latency on named hardware.
 
-| Entry | Purpose |
-|---|---|
-| `README.md` | This directory guide: owner, inputs/outputs, consumers, exclusions and child-file responsibilities. |
-
-## Future alphabet evidence
-
-Check loader labels/paths/splits, deterministic preprocessing, model map/count/version/checksum, finite output and rejection boundaries, permitted golden output/tolerances and exported/runtime decision parity. Alphabet additionally needs reviewed static/temporal distinctions, framing/handedness, held and deliberately repeated letters plus explicit Space through Ali. Software tests and statistical held-out evaluation stay separate. No test code, weights or recognition results exist now.
+The reported test metrics are notebook measurements on the held-out image split; they are not software test results and do not validate the webcam crop experiment.
