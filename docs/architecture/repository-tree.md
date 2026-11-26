@@ -114,7 +114,6 @@ Signova/
 │   │   └── system-overview.md
 │   ├── contracts/
 │   │   ├── README.md
-│   │   ├── dataset-contract.md
 │   │   ├── frontend-backend-contract.md
 │   │   ├── model-interface.md
 │   │   ├── rest-api.md
@@ -125,6 +124,8 @@ Signova/
 │   │   ├── README.md
 │   │   ├── data-governance.md
 │   │   └── source-register.md
+│   ├── guides/
+│   │   └── Signova-Backend-Guide.pdf
 │   ├── runbooks/
 │   │   ├── README.md
 │   │   ├── continuous-integration.md
@@ -211,7 +212,6 @@ Signova/
 │   │   │   ├── dataset.py
 │   │   │   ├── decision.py
 │   │   │   ├── evaluate.py
-│   │   │   ├── export.py
 │   │   │   ├── model.py
 │   │   │   ├── predict.py
 │   │   │   ├── preprocessing.py

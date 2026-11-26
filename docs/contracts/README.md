@@ -15,7 +15,7 @@ Central REST, WebSocket, adapter, data, vocabulary and UI behavior specification
 
 | Entry | Purpose |
 |---|---|
-| [dataset-contract.md](dataset-contract.md) | Manifest/annotation fields, rights, independent splits, model-specific recipes and usable offline release handoffs. |
+| [Offline dataset manifests](../../data/manifests/README.md) | Manifest fields, split metadata and release references. |
 | [frontend-backend-contract.md](frontend-backend-contract.md) | Screen/control duties, authority, version merging, camera cleanup, recovery and exact user-visible failure behavior. |
 | [model-interface.md](model-interface.md) | Separate model representations, common adapter evidence, release deliverables and scientific/runtime acceptance. |
 | [rest-api.md](rest-api.md) | Exact REST routes, fields, access, status codes, mutation semantics, retries and failures from both handbooks. |
