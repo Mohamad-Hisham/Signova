@@ -17,6 +17,6 @@ Safe manifest/split/lineage schema documentation and future reviewed release ref
 |---|---|
 | `README.md` | This directory guide: owner, inputs/outputs, consumers, exclusions and child-file responsibilities. |
 
-## Schema authority
+## Planned manifest fields
 
-`../../docs/contracts/dataset-contract.md` defines future sample/asset/source/rights/label/signer/session/parent/group, media/hash/dimension/time, split and pipeline fields. Public-safe release references can be tracked; full manifests may remain restricted even with pseudonyms. Sample identity and derivative identity have separate uniqueness scopes. No invented CSV/JSONL rows are provided.
+The planned manifest covers sample and asset IDs, source and rights references, label and signer metadata, session and parent/group IDs, media details, hashes, dimensions, timing, split and pipeline version. Sample identity and derivative identity have separate uniqueness scopes. Follow the [data governance policy](../../docs/datasets/data-governance.md) for grouping, release access and publication. Public-safe release references can be tracked. Full manifests may remain restricted even with pseudonyms.

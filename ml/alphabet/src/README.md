@@ -11,6 +11,7 @@ Owner: **Osama**.
 - `audit_hand_detection.py`: notebook-style per-class MediaPipe hand-detection sample audit; not letter recognition accuracy.
 - `predict.py`: side-effect-free single-image predictor.
 - `webcam_experiment.py`: MediaPipe hand detection/cropping webcam script, explicitly unvalidated.
-- `export.py`: release/export flow remains a scaffold; no production release is approved.
+
+The [alphabet release template](../../../artifacts/alphabet/RELEASE-TEMPLATE.md) describes the export and release requirements.
 
 The scripts mirror the executed notebook recipe, but the notebook remains the source of the historical results. The refactored scripts have not been rerun to reproduce the recorded scores. The webcam script accesses the camera and must not be confused with the full-frame test evaluation.
