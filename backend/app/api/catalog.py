@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve public /api/v1/models and /api/v1/vocabulary REST boundaries.
-# Owner: Ali.
+# Owner: Hisham.
 # Expected inputs: Validated release identity, mode readiness, input limits and approved ordered
 #   mapping.
 # Expected outputs: Future safe model entries and complete supported public labels.

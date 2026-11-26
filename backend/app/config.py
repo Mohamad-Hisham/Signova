@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve typed runtime settings and validated startup policy.
-# Owner: Ali.
+# Owner: Hisham.
 # Expected inputs: Later environment/origin/artifact/timeout/capacity settings and
 #   owner-approved manifests.
 # Expected outputs: Future validated immutable configuration or safe startup failure.

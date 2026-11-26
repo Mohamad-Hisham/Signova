@@ -1,6 +1,6 @@
 # backend/app/api
 
-Owner: **Ali**.
+Owner: **Hisham**.
 
 REST-only health/catalogue/session/transcript boundary placeholders.
 

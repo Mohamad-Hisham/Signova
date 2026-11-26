@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve all protocol v1 client messages, server envelopes and event data objects.
-# Owner: Ali.
+# Owner: Basel.
 # Expected inputs: Untrusted auth/frame/ping objects and validated service notifications.
 # Expected outputs: Future exact v1 parsed inputs/serialized envelopes.
 # Responsibilities: Validate version/type, event/session identity, finite timing/scores and

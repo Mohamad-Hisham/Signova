@@ -1,7 +1,7 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve deterministic word stability, evaluated release and segment-latch state
 #   transitions.
-# Owner: Ali.
+# Owner: Basel.
 # Expected inputs: Usable current word observations, monotonic time, approved policy and
 #   explicit manual boundaries.
 # Expected outputs: Future preview eligibility and at-most-once commit intention for a segment.

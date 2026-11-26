@@ -1,7 +1,7 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve strict REST creation, capture, confirm, space, replacement, clear and end
 #   input schemas.
-# Owner: Ali.
+# Owner: Hisham.
 # Expected inputs: Untrusted documented request bodies/query/header identities.
 # Expected outputs: Future validated operation inputs or safe field-path validation errors.
 # Responsibilities: Forbid unknown fields, enforce nonboolean integers, UUID command headers,

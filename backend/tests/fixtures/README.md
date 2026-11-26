@@ -1,6 +1,6 @@
 # backend/tests/fixtures
 
-Owner: **Ali with Basil permission review**.
+Owner: **Hisham with Basil permission review**.
 
 Safe future synthetic request/event descriptions and approved tiny golden references.
 

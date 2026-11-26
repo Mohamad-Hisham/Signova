@@ -1,6 +1,6 @@
 # backend/app/utilities
 
-Owner: **Ali**.
+Owner: **Hisham**.
 
 Safe IDs, content-free errors and separate monotonic/UTC clock placeholders.
 

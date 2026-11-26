@@ -1,6 +1,6 @@
 # backend/app/services
 
-Owner: **Ali**.
+Owner: **Hisham**.
 
 RAM/session, recognition, transcript, word-gate and command coordination placeholders.
 

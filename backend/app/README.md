@@ -1,6 +1,6 @@
 # backend/app
 
-Owner: **Ali**.
+Owner: **Hisham**.
 
 Comment-only app startup/settings, schemas, REST/WS boundaries, services, adapters and utilities.
 

@@ -1,6 +1,6 @@
 # backend/app/ws
 
-Owner: **Ali**.
+Owner: **Basel**.
 
 Single v1 live-session WebSocket boundary placeholder.
 

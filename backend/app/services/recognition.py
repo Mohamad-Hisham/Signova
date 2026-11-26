@@ -1,7 +1,7 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve bounded sample admission, model routing and current candidate/segment
 #   orchestration.
-# Owner: Ali.
+# Owner: Basel.
 # Expected inputs: Validated ordered JPEGs, current session/stream, approved adapter evidence
 #   and capture controls.
 # Expected outputs: Future frame acknowledgements, current candidate eligibility and authorized

@@ -1,6 +1,6 @@
 # backend/tests/unit
 
-Owner: **Ali**.
+Owner: **Hisham**.
 
 Future isolated command/session/transcript/gate/validation acceptance.
 

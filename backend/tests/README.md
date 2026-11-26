@@ -1,6 +1,6 @@
 # backend/tests
 
-Owner: **Ali**.
+Owner: **Hisham**.
 
 Future unit/API/WS/model-parity acceptance descriptions.
 
