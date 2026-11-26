@@ -7,7 +7,7 @@ Status: architecture specification and scaffold, November 16, 2026. Owner: Hisha
 ```mermaid
 flowchart LR
   signer["User performing supported Arabic signs"] --> browser["Adham: browser camera and React interface"]
-  browser -->|"JPEG samples and explicit actions"| api["Ali: one FastAPI backend"]
+  browser -->|"JPEG samples and explicit actions"| api["Hisham and Ali: one FastAPI backend"]
   api -->|"Candidates and confirmed snapshots"| browser
   browser -->|"Explicit Copy or Download"| localCopy["User clipboard or local TXT file"]
   releaseStore["Approved external model artifact storage"] -->|"Trusted releases at startup"| api
@@ -44,19 +44,19 @@ This is a modular monorepo because one repository holds separately owned modules
 
 ```mermaid
 flowchart LR
-  startup["Ali: startup verifies hashes and runtimes"] --> registry["Load each approved model once; warmup and golden checks"]
+  startup["Backend startup verifies hashes and runtimes"] --> registry["Load each approved model once; warmup and golden checks"]
   registry --> ready["Per-mode readiness and release-required health"]
   jpeg["Validated RGB samples with timing and stream identity"] --> route["Session mode selects adapter"]
   route --> alphabetAdapter["backend/app/models/alphabet.py"]
   route --> wordAdapter["backend/app/models/word.py"]
   alphabetAdapter --> alphabetPredictor["Osama recipe and predictor"]
   wordAdapter --> wordPredictor["Bavly recipe, per-stream state and predictor"]
-  alphabetPredictor --> prediction["Ali common internal prediction"]
+  alphabetPredictor --> prediction["Common backend prediction"]
   wordPredictor --> prediction
   prediction --> gate["Current stream checks, eligibility and segment consumption"]
 ```
 
-Ali owns wire validation, scheduling and adapter translation. Model owners own the exact preprocessing semantics and callable inference packages; Ali reproduces or invokes that frozen recipe rather than inventing another transform. Basil versions the offline preparation and verifies parity. The browser does no MediaPipe extraction under v1. Pillow is the initial JPEG decoder; OpenCV/MediaPipe are conditional on the approved model recipe.
+Hisham owns wire validation, scheduling and adapter implementation. Ali owns the protocol and common adapter contracts. Model owners own the exact preprocessing semantics and callable inference packages; the backend reproduces or invokes that frozen recipe rather than inventing another transform. Basil versions the offline preparation and verifies parity. The browser does no MediaPipe extraction under v1. Pillow is the initial JPEG decoder; OpenCV/MediaPipe are conditional on the approved model recipe.
 
 Weights are shared read-only where safe. Temporal windows, tracking state, hidden state, candidate gates and transcript data belong to a single session/stream. A reused stateful extractor must never carry one user's evidence into another session. Source imports from prediction must not pull in training entrypoints; model architecture and deterministic preprocessing have their own modules.
 
@@ -64,7 +64,7 @@ Weights are shared read-only where safe. Temporal windows, tracking state, hidde
 
 Adham owns Homepage, Live Translator (Alphabet/Word), Recognition Preview, Confirmed Transcript, transcript editing, explicit copy/download/clear, Sign Library, and About/Help. The same workspace can host both modes; switching mode ends the current session and creates a fresh one. Candidate previews and confirmed text are separate regions. Sign Library uses the model-compatible public vocabulary, with rights-cleared validated examples only.
 
-Ali owns session capabilities, validation, model routing/loading, candidates, word gating, command identity and authoritative transcript snapshots. Osama owns alphabet science; Bavly owns word science and evaluated temporal/completion evidence. Basil owns source rights, labels, grouping/splits and reproducible dataset releases. Hisham coordinates contracts, QA and final acceptance.
+Hisham and Ali share backend ownership. Ali leads session capabilities, command identity and authoritative transcript snapshots. Hisham leads live validation, model adapters, candidates and word gating. Osama owns alphabet science; Bavly owns word science and evaluated temporal/completion evidence. Basil owns source rights, labels, grouping/splits and reproducible dataset releases. Hisham coordinates contracts, QA and final acceptance.
 
 ## Storage and failure boundaries
 

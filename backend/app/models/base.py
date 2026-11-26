@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
-# Purpose: Reserve Ali common adapter evidence and runtime lifecycle interface.
-# Owner: Basel.
+# Purpose: Reserve common adapter evidence and runtime lifecycle interface.
+# Owner: Hisham.
 # Expected inputs: Owner-specific approved predictor outputs and validated model-bound samples.
 # Expected outputs: Future normalized evidence plus model version/readiness/reset semantics.
 # Responsibilities: Hide runtime/tensor/class-index differences from networking and explicitly

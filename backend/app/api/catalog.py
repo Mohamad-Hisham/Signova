@@ -6,8 +6,8 @@
 # Expected outputs: Future safe model entries and complete supported public labels.
 # Responsibilities: Translate stable IDs/Arabic text, exclude unknown/neutral internals and
 #   reflect input:null until manifest validates.
-# Connections: Loaded model registry/adapters, schemas/rest/common and Basil reviewed
-#   vocabulary.
+# Connections: Loaded model registry/adapters, schemas/rest/common and reviewed
+#   vocabulary supplied by the data owner.
 # Future implementation: Implement read-only metadata routes after real manifests/mapping
 #   delivery.
 # Rules and limitations: No fake-dev release catalogue, weights/paths, re-sorted logit indices

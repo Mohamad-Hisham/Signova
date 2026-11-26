@@ -8,7 +8,7 @@ The existing root README, license, five handbooks, and Excalidraw board are pres
 
 Read [the system overview](docs/architecture/system-overview.md), [runtime flows](docs/architecture/runtime-data-flow.md), and [ownership](docs/team/ownership.md). Then read your module README and the relevant contracts under [docs/contracts](docs/contracts/README.md). Coordinate unresolved interface or scope decisions with Hisham and the affected owners.
 
-One React/TypeScript/Vite frontend communicates through native Fetch and WebSocket with one Python 3.11-target FastAPI backend. The backend loads independent alphabet and word packages through dedicated adapters. Basil's offline data releases feed the two model owners; approved versioned model releases reach Ali through external artifact storage. These are modules in one monorepo, not microservices.
+One React/TypeScript/Vite frontend communicates through native Fetch and WebSocket with one Python 3.11-target FastAPI backend. The backend loads independent alphabet and word packages through dedicated adapters. Basil's offline data releases feed the two model owners; approved versioned model releases reach the backend team through external artifact storage. These are modules in one monorepo, not microservices.
 
 The live path is browser camera → bounded unmirrored JPEG samples → authenticated WebSocket → validation and server preprocessing → selected adapter → candidate preview → explicit confirmation → authoritative RAM transcript → browser snapshot. Automatic word completion requires evaluated release evidence and joint acceptance. Pause discards pending evidence; it never classifies a final buffered clip.
 
@@ -16,11 +16,11 @@ The live path is browser camera → bounded unmirrored JPEG samples → authenti
 
 | Member | Primary responsibility | Start directory |
 |---|---|---|
-| Hisham | Architecture, integration, QA, shared contracts and final acceptance | `docs/`, `tests/`, root collaboration files |
+| Hisham | Backend with Ali, including live frames, recognition and model adapter implementation. Also owns architecture, integration, QA and final acceptance. | `backend/`, `docs/`, `tests/` |
 | Basil | Rights, intake, cleaning, labels, groups/splits, dataset releases and lineage | `data/`, `docs/datasets/` |
 | Osama | Alphabet model, its preprocessing, evaluation and release | `ml/alphabet/`, `artifacts/alphabet/` |
 | Bavly | Word model, temporal requirements, boundary evidence and release | `ml/words/`, `artifacts/words/` |
-| Ali | Backend, session capabilities, adapters, inference orchestration and transcript authority | `backend/` |
+| Ali | Backend with Hisham, including REST and WebSocket contracts, sessions and transcript behavior. | `backend/`, `docs/contracts/` |
 | Adham | Frontend, camera lifecycle, preview, transcript editor, copy/download and recovery UX | `frontend/` |
 
 The package directory is `ml/words/`, but the public API mode is exactly `word`. Both models retain separate label maps, shapes, preprocessing and scientific acceptance.

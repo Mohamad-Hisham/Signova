@@ -1,6 +1,6 @@
 # backend
 
-Owner: **Hisham**.
+Owners: **Hisham and Ali**.
 
 One Python/FastAPI application scaffold, dependency notes and future test plans.
 
@@ -26,6 +26,6 @@ One Python/FastAPI application scaffold, dependency notes and future test plans.
 
 Every Python file is comments only; there is no FastAPI app, route, schema class, WebSocket handler, fake model or test implementation. Both requirement files contain explanatory comments, not installable/tested package pins. `.env.example` has no active assignments or secrets.
 
-The initial compatibility target is Python 3.11 with FastAPI, Pydantic v2, Uvicorn, NumPy, Pillow, Pytest, HTTPX and Ruff; typed settings tooling and actual inference dependencies require a tested compatible selection. Both real model runtimes must coexist in one process. Optional OpenCV/MediaPipe follows the owner-approved model recipe only. Ali implements API/WS boundaries → services → dedicated adapters, keeping training out of handlers and inference outside session locks/network loops.
+The initial compatibility target is Python 3.11 with FastAPI, Pydantic v2, Uvicorn, NumPy, Pillow, Pytest, HTTPX and Ruff; typed settings tooling and actual inference dependencies require a tested compatible selection. Both real model runtimes must coexist in one process. Optional OpenCV/MediaPipe follows the owner-approved model recipe only. Ali owns the REST and WebSocket contracts. Hisham owns the live frame pipeline, recognition services and adapter implementation. Both maintain the backend runtime, keeping training out of handlers and inference outside session locks and network loops.
 
 Temporary per-session capabilities protect access without introducing accounts/auth infrastructure. One process/worker/replica is required; reload/restart loses RAM sessions. Real runtime configuration, exact package versions and run/test commands are future implementation deliverables. Read `../docs/contracts/rest-api.md`, `websocket-protocol.md` and `model-interface.md` in that contracts directory first.

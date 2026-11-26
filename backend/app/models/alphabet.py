@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve the dedicated Osama alphabet runtime adapter.
-# Owner: Basel.
+# Owner: Hisham.
 # Expected inputs: Trusted alphabet release, exact class map/recipe and validated current image
 #   or approved sequence.
 # Expected outputs: Future shared alphabet evidence and startup/reset/readiness outcome.
