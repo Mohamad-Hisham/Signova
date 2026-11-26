@@ -2,6 +2,11 @@
 
 Owners: **Hisham and Ali**.
 
+| Owner | Files and responsibilities |
+|---|---|
+| Ali | REST handlers in `app/api/`, wire schemas in `app/schemas/`, session, command and transcript services, server startup and settings, and shared utilities. |
+| Hisham | Live WebSocket handling in `app/ws/`, model adapters in `app/models/`, recognition and word gate services, and backend test coordination. |
+
 One Python/FastAPI application scaffold, dependency notes and future test plans.
 
 | Boundary | Responsibility |

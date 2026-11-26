@@ -1,6 +1,6 @@
 # backend/app/schemas
 
-Owner: **Hisham with Adham consumer review**.
+Owner: **Ali with Adham consumer review**.
 
 Common response, REST request and WebSocket event placeholder schemas.
 

@@ -11,6 +11,8 @@ Hisham and Ali share backend ownership. Hisham coordinates boundaries and final 
 | Ali | Shared ownership of `backend/` with Hisham. Leads REST, WebSocket and common adapter contracts, session and transcript behavior. | Adham reviews public API changes. Hisham and Ali coordinate runtime integration, readiness and security. |
 | Adham | `frontend/`, screen/camera/controller/state/editor/recovery/copy/download/accessibility behavior | Ali agrees fields/versions; Basil and model owners approve public help/vocabulary and camera requirements |
 
+Within `backend/app/`, Ali owns `api/`, `schemas/`, `main.py`, `config.py`, `utilities/` and the `sessions.py`, `commands.py` and `transcript.py` services. Hisham owns `ws/`, `models/`, `recognition.py` and `word_gate.py`. Use the [backend file catalogue](../architecture/file-catalog.md) for individual files.
+
 `ml/common/` is jointly reviewed by Osama and Bavly, coordinated by Hisham. Add a shared utility only when input/output and behavior are actually identical and both owners accept it. `artifacts/` release policy belongs to Hisham/Ali with each model owner accountable for its scientific package. Contracts are central shared documents with the specific owner shown in each file, never a place for silent unilateral changes.
 
 Directory ownership is accountability, not a separate repository or an automatic permission barrier. Teammates may make reviewed changes across boundaries with the affected owner/consumer. No CODEOWNERS file is fabricated without real GitHub identities. No automatic GitHub actions, commits, pushes, invitations or messages are created by this scaffold.

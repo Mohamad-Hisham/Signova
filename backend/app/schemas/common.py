@@ -1,7 +1,7 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve canonical Session, Transcript, Item, Candidate and safe Error response
 #   shapes.
-# Owner: Hisham.
+# Owner: Ali.
 # Expected inputs: Shared documented response fields and owner-approved semantics.
 # Expected outputs: Future Pydantic v2 response objects with finite values and correct
 #   nullability.

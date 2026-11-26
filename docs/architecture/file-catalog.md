@@ -27,7 +27,7 @@ Owner: Hisham. Application source placeholders remain comment-only with nine fil
 | [artifacts/words/RELEASE-TEMPLATE.md](../../artifacts/words/RELEASE-TEMPLATE.md) | Bavly | documentation | Model-specific complete release checklist and future immutable external reference format without fake artifacts. |
 | [backend/.env.example](../../backend/.env.example) | Ali | comment-only placeholder | Describe future server-only runtime settings without active assignments or secrets. |
 | [backend/README.md](../../backend/README.md) | Hisham and Ali | documentation | Directory guide for backend: contents, ownership, inputs, outputs, consumers and exclusions. |
-| [backend/app/README.md](../../backend/app/README.md) | Ali | documentation | Directory guide for backend/app: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [backend/app/README.md](../../backend/app/README.md) | Hisham and Ali | documentation | Directory guide for backend/app: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [backend/app/api/README.md](../../backend/app/api/README.md) | Ali | documentation | Directory guide for backend/app/api: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [backend/app/api/catalog.py](../../backend/app/api/catalog.py) | Ali | comment-only placeholder | Reserve public /api/v1/models and /api/v1/vocabulary REST boundaries. |
 | [backend/app/api/health.py](../../backend/app/api/health.py) | Ali | comment-only placeholder | Reserve public /api/v1/health/live and /health/ready REST boundaries. |
@@ -42,9 +42,9 @@ Owner: Hisham. Application source placeholders remain comment-only with nine fil
 | [backend/app/models/word.py](../../backend/app/models/word.py) | Hisham | comment-only placeholder | Reserve the dedicated Bavly temporal word runtime adapter. |
 | [backend/app/schemas/README.md](../../backend/app/schemas/README.md) | Ali with Adham consumer review | documentation | Directory guide for backend/app/schemas: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [backend/app/schemas/common.py](../../backend/app/schemas/common.py) | Ali | comment-only placeholder | Reserve canonical Session, Transcript, Item, Candidate and safe Error response shapes. |
-| [backend/app/schemas/events.py](../../backend/app/schemas/events.py) | Hisham | comment-only placeholder | Reserve all protocol v1 client messages, server envelopes and event data objects. |
+| [backend/app/schemas/events.py](../../backend/app/schemas/events.py) | Ali | comment-only placeholder | Reserve all protocol v1 client messages, server envelopes and event data objects. |
 | [backend/app/schemas/rest.py](../../backend/app/schemas/rest.py) | Ali | comment-only placeholder | Reserve strict REST creation, capture, confirm, space, replacement, clear and end input schemas. |
-| [backend/app/services/README.md](../../backend/app/services/README.md) | Ali | documentation | Directory guide for backend/app/services: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [backend/app/services/README.md](../../backend/app/services/README.md) | Ali for session, command and transcript services. Hisham for recognition and the word gate | documentation | Directory guide for backend/app/services: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [backend/app/services/commands.py](../../backend/app/services/commands.py) | Ali | comment-only placeholder | Reserve shared revision/state-version and bounded idempotency coordination. |
 | [backend/app/services/recognition.py](../../backend/app/services/recognition.py) | Hisham | comment-only placeholder | Reserve bounded sample admission, model routing and current candidate/segment orchestration. |
 | [backend/app/services/sessions.py](../../backend/app/services/sessions.py) | Ali | comment-only placeholder | Reserve authoritative temporary RAM session and capability lifecycle. |
@@ -58,10 +58,10 @@ Owner: Hisham. Application source placeholders remain comment-only with nine fil
 | [backend/app/ws/live.py](../../backend/app/ws/live.py) | Hisham | comment-only placeholder | Reserve the single authenticated /api/v1/ws/sessions/{sid} connection boundary. |
 | [backend/requirements.in](../../backend/requirements.in) | Ali | comment-only placeholder | Reserve direct dependency intent for the single backend runtime. |
 | [backend/requirements.lock.txt](../../backend/requirements.lock.txt) | Ali | comment-only placeholder | Reserve a tested dependency lock for the single backend runtime. |
-| [backend/tests/README.md](../../backend/tests/README.md) | Ali | documentation | Directory guide for backend/tests: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [backend/tests/README.md](../../backend/tests/README.md) | Hisham | documentation | Directory guide for backend/tests: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [backend/tests/fixtures/README.md](../../backend/tests/fixtures/README.md) | Hisham with permission review by the data owner | documentation | Directory guide for backend/tests/fixtures: contents, ownership, inputs, outputs, consumers and exclusions. |
-| [backend/tests/integration/README.md](../../backend/tests/integration/README.md) | Ali | documentation | Directory guide for backend/tests/integration: contents, ownership, inputs, outputs, consumers and exclusions. |
-| [backend/tests/unit/README.md](../../backend/tests/unit/README.md) | Ali | documentation | Directory guide for backend/tests/unit: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [backend/tests/integration/README.md](../../backend/tests/integration/README.md) | Hisham | documentation | Directory guide for backend/tests/integration: contents, ownership, inputs, outputs, consumers and exclusions. |
+| [backend/tests/unit/README.md](../../backend/tests/unit/README.md) | Hisham | documentation | Directory guide for backend/tests/unit: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [data/README.md](../../data/README.md) | Basil | documentation | Directory guide for data: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [data/configs/README.md](../../data/configs/README.md) | Basil | documentation | Directory guide for data/configs: contents, ownership, inputs, outputs, consumers and exclusions. |
 | [data/features/.gitkeep](../../data/features/.gitkeep) | Basil | empty directory marker | Empty marker retained alongside the payload-area README; stores no data. |

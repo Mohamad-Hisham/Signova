@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve the one FastAPI application composition and lifecycle boundary.
-# Owner: Hisham.
+# Owner: Ali.
 # Expected inputs: Reviewed server settings and both trusted approved inference packages.
 # Expected outputs: Future application lifecycle and per-mode readiness; no app object exists
 #   yet.

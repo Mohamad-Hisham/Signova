@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve authoritative temporary confirmed transcript validation and atomic snapshots.
-# Owner: Hisham.
+# Owner: Ali.
 # Expected inputs: Confirmed current recognition items, expected revisions, full edit lists,
 #   explicit space and clear intents.
 # Expected outputs: Future canonical items/derived text/revision snapshots and committed item
