@@ -1,6 +1,6 @@
 # backend/app/services
 
-Owner: **Hisham**.
+Owners: **Ali for sessions, commands and transcripts. Hisham for recognition and the word gate.**
 
 RAM/session, recognition, transcript, word-gate and command coordination placeholders.
 

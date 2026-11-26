@@ -1,3 +1,5 @@
+# Owner: Ali.
+
 import hashlib
 import hmac
 import secrets

@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve public /api/v1/health/live and /health/ready REST boundaries.
-# Owner: Hisham.
+# Owner: Ali.
 # Expected inputs: Application liveness and trusted per-mode startup/golden readiness state.
 # Expected outputs: Future alive 200 or ready 200/503 with documented non-error readiness shape.
 # Responsibilities: Keep process liveness separate from release-required model availability

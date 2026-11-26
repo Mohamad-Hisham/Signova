@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve shared revision/state-version and bounded idempotency coordination.
-# Owner: Hisham.
+# Owner: Ali.
 # Expected inputs: Authenticated session, UUID key, canonical method/path/body and operation
 #   callback intent.
 # Expected outputs: Future copied cached success, authorized atomic mutation outcome or safe
