@@ -1,6 +1,6 @@
 # backend/app/models
 
-Owner: **Ali; Osama/Bavly review their adapters**.
+Owner: **Basel; Osama/Bavly review their adapters**.
 
 Common adapter boundary and independent alphabet/word/development-fake placeholders.
 

@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve replacement, clear and current-revision TXT export REST boundaries.
-# Owner: Ali.
+# Owner: Hisham.
 # Expected inputs: Bearer capability, validated edit/clear commands or format/revision query.
 # Expected outputs: Future canonical snapshots or UTF-8 no-store text/204 export.
 # Responsibilities: Delegate atomic validation/replacement/clear to service, attach correct

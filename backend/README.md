@@ -1,6 +1,6 @@
 # backend
 
-Owner: **Ali**.
+Owner: **Hisham**.
 
 One Python/FastAPI application scaffold, dependency notes and future test plans.
 

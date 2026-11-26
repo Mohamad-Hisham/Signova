@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve REST create/read/capture/confirm/space/end/delete session boundaries.
-# Owner: Ali.
+# Owner: Hisham.
 # Expected inputs: Validated body/headers, per-session bearer capability and service results.
 # Expected outputs: Future exact statuses, one-time token and canonical session
 #   snapshots/item_id.
