@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve the dedicated Bavly temporal word runtime adapter.
-# Owner: Basel.
+# Owner: Hisham.
 # Expected inputs: Trusted word package, owner-approved ordered samples/times/features and
 #   per-stream context.
 # Expected outputs: Future shared usable/rejected/neutral evidence and documented

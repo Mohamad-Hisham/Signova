@@ -1,7 +1,7 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve an explicitly labeled deterministic development adapter for later software
 #   integration.
-# Owner: Basel.
+# Owner: Hisham.
 # Expected inputs: Future synthetic prediction traces and injected time independent of real user
 #   camera data.
 # Expected outputs: Future repeatable non-scientific evidence for API/UI tests only.

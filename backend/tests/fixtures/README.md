@@ -1,6 +1,6 @@
 # backend/tests/fixtures
 
-Owner: **Hisham with Basil permission review**.
+Owner: **Hisham with fixture permission review by the data owner**.
 
 Safe future synthetic request/event descriptions and approved tiny golden references.
 

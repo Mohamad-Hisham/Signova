@@ -1,6 +1,6 @@
 # backend/app/models
 
-Owner: **Basel; Osama/Bavly review their adapters**.
+Owner: **Hisham; Osama/Bavly review their adapters**.
 
 Common adapter boundary and independent alphabet/word/development-fake placeholders.
 
@@ -16,7 +16,7 @@ Common adapter boundary and independent alphabet/word/development-fake placehold
 | Entry | Purpose |
 |---|---|
 | [alphabet.py](alphabet.py) | Reserve the dedicated Osama alphabet runtime adapter. |
-| [base.py](base.py) | Reserve Ali common adapter evidence and runtime lifecycle interface. |
+| [base.py](base.py) | Reserve common adapter evidence and runtime lifecycle interface. |
 | [fake.py](fake.py) | Reserve an explicitly labeled deterministic development adapter for later software integration. |
 | [word.py](word.py) | Reserve the dedicated Bavly temporal word runtime adapter. |
 | `README.md` | This directory guide: owner, inputs/outputs, consumers, exclusions and child-file responsibilities. |

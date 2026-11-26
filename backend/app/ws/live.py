@@ -1,6 +1,6 @@
 # Signova scaffold — documentation placeholder; no implementation.
 # Purpose: Reserve the single authenticated /api/v1/ws/sessions/{sid} connection boundary.
-# Owner: Basel.
+# Owner: Hisham.
 # Expected inputs: Exact Origin, first auth, strict v1 frame/ping and service notifications.
 # Expected outputs: Future session.ready/state/candidate/transcript/ack/error/terminal events
 #   through one writer.
