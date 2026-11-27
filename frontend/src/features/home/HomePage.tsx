@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { motion } from "motion/react";
 import {
   ArrowRight,
@@ -13,7 +12,9 @@ import {
 } from "lucide-react";
 import "./HomePage.css";
 
-type Mode = "word" | "alphabet";
+type Props = {
+  onOpenMode: (mode: "word" | "alphabet") => void;
+};
 
 const workflow = [
   {
@@ -33,9 +34,7 @@ const workflow = [
   },
 ];
 
-export default function HomePage() {
-  const [selectedMode, setSelectedMode] = useState<Mode>("word");
-
+export default function HomePage({ onOpenMode }: Props) {
   const scrollToModes = () => {
     document.getElementById("modes")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -101,7 +100,7 @@ export default function HomePage() {
               </div>
               <div className="trust-row" aria-label="Signova privacy points">
                 <span><ShieldCheck size={16} /> No account needed</span>
-                <span><Video size={16} /> Camera stays in your browser</span>
+                <span><Video size={16} /> No camera recording</span>
               </div>
             </motion.div>
 
@@ -120,7 +119,7 @@ export default function HomePage() {
                   </div>
                   <div className="demo-status">
                     <span />
-                    Ready
+                    Product preview
                   </div>
                 </div>
                 <div className="demo-body">
@@ -141,11 +140,11 @@ export default function HomePage() {
                     <div className="camera-corner corner-top-right" />
                     <div className="camera-corner corner-bottom-left" />
                     <div className="camera-corner corner-bottom-right" />
-                    <div className="demo-live-label">LIVE PREVIEW</div>
+                    <div className="demo-live-label">ILLUSTRATIVE UI · NOT LIVE RECOGNITION</div>
                   </div>
 
                   <div className="demo-result">
-                    <span className="result-label">Recognized sign</span>
+                    <span className="result-label">Example candidate</span>
                     <motion.div
                       className="result-word"
                       animate={{ opacity: [0.55, 1, 1, 0.55], y: [3, 0, 0, 3] }}
@@ -171,8 +170,8 @@ export default function HomePage() {
                 </div>
                 <div className="demo-transcript">
                   <div>
-                    <span className="transcript-title">Confirmed transcript</span>
-                    <span className="transcript-count">1 item</span>
+                    <span className="transcript-title">Sample transcript</span>
+                    <span className="transcript-count">Illustration only</span>
                   </div>
                   <motion.p
                     lang="ar"
@@ -207,8 +206,7 @@ export default function HomePage() {
 
             <div className="mode-grid">
               <motion.article
-                className={`mode-card ${selectedMode === "word" ? "mode-card-active" : ""}`}
-                onClick={() => setSelectedMode("word")}
+                className="mode-card"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.35 }}
@@ -217,15 +215,12 @@ export default function HomePage() {
                 <button
                   className="mode-card-button"
                   type="button"
-                  aria-pressed={selectedMode === "word"}
-                  onClick={() => setSelectedMode("word")}
+                  onClick={() => onOpenMode("word")}
                 >
                   <div className="mode-icon mode-icon-word">
                     <Languages size={25} aria-hidden="true" />
                   </div>
-                  <span className="mode-status">
-                    {selectedMode === "word" ? "Selected" : "Choose"}
-                  </span>
+                  <span className="mode-status">Open mode</span>
                   <h3>Word mode</h3>
                   <p>Recognize supported isolated Arabic sign words.</p>
                   <span className="mode-link">
@@ -235,8 +230,7 @@ export default function HomePage() {
               </motion.article>
 
               <motion.article
-                className={`mode-card ${selectedMode === "alphabet" ? "mode-card-active" : ""}`}
-                onClick={() => setSelectedMode("alphabet")}
+                className="mode-card"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.35 }}
@@ -245,15 +239,12 @@ export default function HomePage() {
                 <button
                   className="mode-card-button"
                   type="button"
-                  aria-pressed={selectedMode === "alphabet"}
-                  onClick={() => setSelectedMode("alphabet")}
+                  onClick={() => onOpenMode("alphabet")}
                 >
                   <div className="mode-icon mode-icon-letter">
                     <Type size={25} aria-hidden="true" />
                   </div>
-                  <span className="mode-status">
-                    {selectedMode === "alphabet" ? "Selected" : "Choose"}
-                  </span>
+                  <span className="mode-status">Open mode</span>
                   <h3>Alphabet mode</h3>
                   <p>Confirm individual Arabic letters and add spaces deliberately.</p>
                   <span className="mode-link">
