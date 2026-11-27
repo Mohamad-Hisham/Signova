@@ -84,7 +84,11 @@ if not camera.isOpened():
 
 if not camera.isOpened():
     landmarker.close()
-    raise RuntimeError("مش قادر أفتح الكاميرا. اقفل Zoom أو Teams وجرب تاني.")
+    raise RuntimeError(
+        "Cannot open camera 0. In WSL, run: python -m ml.alphabet.src.browser_demo "
+        "and open http://localhost:8765 in your Windows browser. "
+        "Otherwise, check camera permissions and close other camera apps."
+    )
 
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
