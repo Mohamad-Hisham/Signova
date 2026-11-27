@@ -1,20 +1,4 @@
-# Signova scaffold — documentation placeholder; no implementation.
-# Purpose: Reserve deterministic word stability, evaluated release and segment-latch state
-#   transitions.
-# Owner: Hisham.
-# Expected inputs: Usable current word observations, monotonic time, approved policy and
-#   explicit manual boundaries.
-# Expected outputs: Future preview eligibility and at-most-once commit intention for a segment.
-# Responsibilities: Track WAIT_RELEASE/IDLE/TRACKING/ELIGIBLE/LOCKED, freshness and neutral
-#   dwell; preserve deliberate repeats after valid new segments.
-# Connections: recognition.py, transcript atomic commit, Bavly adapter evidence and session
-#   reset lifecycle.
-# Future implementation: Implement timing/state gate only after Bavly neutral/live-window
-#   evidence and Hisham policy approval.
-# Rules and limitations: Low score/no hand/unknown/gap is not neutral; Pause/disconnect discard;
-#   automatic policy disabled without evidence.
-# Expected tests or acceptance: Hold→one confirm once; release→same word twice; changing label
-#   while locked cannot bypass release; stale candidate/invalid continuity never auto-commit.
+"""Track stability and deliberate release for manual recognition."""
 
 from enum import Enum
 
@@ -35,7 +19,6 @@ class WordGate:
         self,
         clock: Clock,
         *,
-        automatic_completion: bool = False,
         entry_score: float = 0.85,
         exit_score: float = 0.65,
         stability_seconds: float = 0.300,
@@ -45,7 +28,6 @@ class WordGate:
         manual_mode: bool = True,
     ):
         self.clock = clock
-        self.automatic_completion = automatic_completion
         self.entry_score = entry_score
         self.exit_score = exit_score
         self.stability_seconds = stability_seconds
@@ -53,7 +35,7 @@ class WordGate:
         self.minimum_observations = minimum_observations
         self.candidate_freshness_seconds = candidate_freshness_seconds
         self.manual_mode = manual_mode
-        self.reset(manual=manual_mode)
+        self.reset()
 
     def reset(self, *, manual: bool | None = None) -> None:
         if manual is not None:
@@ -61,98 +43,83 @@ class WordGate:
         self.state = (
             WordGateState.IDLE if self.manual_mode else WordGateState.WAIT_RELEASE
         )
+        self.active_label: str | None = None
+        self.observation_count = 0
+        self.tracking_start = 0.0
+        self.neutral_start: float | None = None
+        self.candidate: Prediction | None = None
+        self.candidate_deadline = 0.0
+
+    def break_continuity(self) -> None:
         self.active_label = None
         self.observation_count = 0
         self.tracking_start = 0.0
         self.neutral_start = None
         self.candidate = None
         self.candidate_deadline = 0.0
-        self.committed_segment = False
+        if self.state not in (WordGateState.LOCKED, WordGateState.WAIT_RELEASE):
+            self.state = WordGateState.IDLE
 
     def update(self, prediction: Prediction | None) -> Prediction | None:
         now = self.clock.now_monotonic()
-
         if self.candidate is not None and now >= self.candidate_deadline:
-            self.candidate = None
-            self.candidate_deadline = 0.0
-            if self.state == WordGateState.ELIGIBLE:
-                self.state = WordGateState.IDLE
+            self.break_continuity()
 
-        if prediction is None or not prediction.usable:
-            self.active_label = None
-            self.observation_count = 0
-            self.tracking_start = 0.0
-            if self.state == WordGateState.TRACKING:
-                self.state = WordGateState.IDLE
-            return None
-
-        if prediction.neutral:
-            if self.state == WordGateState.LOCKED:
+        if prediction is not None and prediction.neutral:
+            if self.state in (WordGateState.LOCKED, WordGateState.WAIT_RELEASE):
                 if self.neutral_start is None:
                     self.neutral_start = now
-                elif now - self.neutral_start + 1e-9 >= self.neutral_dwell_seconds:
-                    self.state = (
-                        WordGateState.IDLE
-                        if self.manual_mode
-                        else WordGateState.WAIT_RELEASE
-                    )
-                    self.active_label = None
-                    self.observation_count = 0
-                    self.tracking_start = 0.0
-                    self.candidate = None
-                    self.candidate_deadline = 0.0
-                    self.committed_segment = False
-                    self.neutral_start = None
+                if now - self.neutral_start + 1e-9 >= self.neutral_dwell_seconds:
+                    self.break_continuity()
+                    self.state = WordGateState.IDLE
             else:
-                self.neutral_start = None
+                self.break_continuity()
             return None
 
-        if prediction.label_id is None:
+        self.neutral_start = None
+        if self.state in (WordGateState.LOCKED, WordGateState.WAIT_RELEASE):
             return None
-        if self.state == WordGateState.LOCKED:
+        if prediction is None or not prediction.usable or prediction.label_id is None:
+            self.break_continuity()
             return None
 
-        if (
-            self.active_label != prediction.label_id
-            or prediction.score < self.exit_score
-        ):
+        same_label = prediction.label_id == self.active_label
+        if not same_label:
+            self.break_continuity()
+        threshold = (
+            self.exit_score
+            if self.state == WordGateState.ELIGIBLE
+            else self.entry_score
+        )
+        if prediction.score < threshold:
+            self.break_continuity()
+            return None
+
+        if not same_label:
             self.active_label = prediction.label_id
-            self.observation_count = 1
+            self.state = WordGateState.TRACKING
             self.tracking_start = now
-            self.state = WordGateState.TRACKING
-            return None
-
-        if prediction.score < self.entry_score:
-            self.state = WordGateState.TRACKING
-            return None
-
         self.observation_count += 1
-        elapsed = now - self.tracking_start
         if (
             self.observation_count >= self.minimum_observations
-            and elapsed >= self.stability_seconds
+            and now - self.tracking_start + 1e-9 >= self.stability_seconds
         ):
+            self.state = WordGateState.ELIGIBLE
             self.candidate = prediction
             self.candidate_deadline = now + self.candidate_freshness_seconds
-            self.state = WordGateState.ELIGIBLE
-
         return self.candidate
 
-    def confirm_once(self) -> Prediction | None:
-        if self.candidate is None:
-            return None
-        now = self.clock.now_monotonic()
-        if now >= self.candidate_deadline:
-            self.candidate = None
-            self.candidate_deadline = 0.0
-            self.state = WordGateState.IDLE
-            return None
-        if self.committed_segment:
-            return None
+    def eligible_candidate(self) -> Prediction | None:
+        if self.candidate is not None and self.clock.expired(self.candidate_deadline):
+            self.break_continuity()
+        return self.candidate
 
-        confirmed = self.candidate
-        self.committed_segment = True
+    def lock_segment(self) -> None:
+        self.break_continuity()
         self.state = WordGateState.LOCKED
-        self.candidate = None
-        self.candidate_deadline = 0.0
-        return confirmed
+
+    def confirm_once(self) -> Prediction | None:
+        candidate = self.eligible_candidate()
+        if candidate is not None:
+            self.lock_segment()
+        return candidate

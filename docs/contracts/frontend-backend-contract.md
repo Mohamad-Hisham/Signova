@@ -10,11 +10,12 @@ Candidates never append frontend transcript text. Server revision orders transcr
 
 | Surface/action | Frontend responsibility | Backend authority/output |
 |---|---|---|
-| Homepage and mode selection | Display purpose, available scope/readiness, privacy and unchecked recovery option; no camera on visit | Public catalogue/vocabulary/readiness; create paused session with immutable mode |
+| Homepage and mode selection | Display available modes, model readiness, privacy and unchecked recovery option. Open the camera after a deliberate user action. | Public catalogue, vocabulary and readiness. Create a paused session for a ready mode. |
 | Start | Deliberate camera permission, usable video, authenticated socket, current versions; no send before success | New stream and capturing snapshot; revision unchanged |
 | Live Translator and Preview | Bounded JPEG/ack flow; candidate/eligibility display; no fake skeleton or direct model imports | Validate/preprocess/route; current candidate only |
 | Confirm word/letter | Current eligible candidate, stream/revision and one command UUID; disable pending | Consume one current segment; snapshot plus item_id; duplicate attempt conflicts |
 | Pause | Immediately stop sampler/tracks and local generation; reconcile command outcome | Discard all pending evidence, invalidate stream; never classify final window |
+| Switch alphabet or word | Read model readiness, use the active session's token and expected versions, discard the old preview after success, and reset frame sequence for the new stream | Change the active adapter in the same session while preserving the confirmed transcript and revision |
 | Space | Alphabet only, paused, fresh revision/UUID | Explicit user space; reject leading/repeated spaces or wrong mode |
 | Transcript editor | Pause and reconcile first; separate draft; Save/Cancel and IME-safe RTL; protect uncertain saves | Full validated ordered replacement; changed text becomes user-authored; revision +1 |
 | Copy | Explicit clipboard gesture; confirmed text versus draft clearly labeled; honest denied-permission fallback | No API mutation or revision change |
@@ -24,7 +25,7 @@ Candidates never append frontend transcript text. Server revision orders transcr
 | Delete | Deliberate removal; barrier and minimal pending credential; discard after acknowledgement | Immediate RAM erase, content-free event/tombstone; 204 |
 | Sign Library and About/Help | Show approved supported scope, limitations, permitted examples and accessible guidance | Public model-compatible Arabic vocabulary; English mechanism still undecided |
 
-Mode change ends the existing session and creates a new one. No in-place mode mutation or reused old stream/token. Word hold → Confirm once stays latched; valid release or approved manual Pause/Start permits a deliberate identical next word. The same applies to repeated letters; only explicit Space adds gaps. Automatic completion may be advertised only from accepted model capability/evidence.
+Mode change preserves the session ID, token, and transcript. A capturing session receives a new stream ID on the same socket. Keep the current view and stream if the target mode returns `MODEL_UNAVAILABLE`. A confirmed hold stays latched until evaluated release or an explicit Pause/Start. The current alphabet checkpoint uses the manual Pause/Start flow after confirmation. Automatic completion requires evaluated release evidence.
 
 ## Camera and permission lifecycle
 

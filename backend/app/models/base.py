@@ -14,6 +14,7 @@
 #   output; null raw-score handling follows recorded decision.
 
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -32,8 +33,12 @@ class Prediction:
 class ModelAdapter(Protocol):
     mode: str
     model_version: str
+    labels: Sequence[dict[str, str]]
+    confirmation_policy: str
+    window_samples: int
+    required_sample_fps: float | None
 
-    def predict(self, frames: list[bytes], times_ms: list[float]): ...
+    def predict(self, frames: list[bytes], times_ms: list[float]) -> Prediction: ...
 
     def reset_stream(self, stream_id: str) -> None: ...
 
@@ -91,6 +96,9 @@ class AdapterRegistry:
         if adapter is None:
             raise KeyError("Recognition adapter is unavailable")
         return adapter
+
+    def unregister(self, mode: str) -> None:
+        self._adapters.pop(mode, None)
 
     def readiness(self) -> dict[str, bool]:
         return {
