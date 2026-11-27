@@ -11,6 +11,7 @@ Owner: **Osama**.
 - `audit_hand_detection.py`: notebook-style per-class MediaPipe hand-detection sample audit; not letter recognition accuracy.
 - `predict.py`: side-effect-free single-image predictor.
 - `webcam_experiment.py`: MediaPipe hand detection/cropping webcam script, explicitly unvalidated.
+- `browser_demo.py` and `browser_demo.html`: local browser-camera demo for environments such as WSL without a native webcam device; uses the experimental hand crop and stability filters.
 
 The [alphabet release template](../../../artifacts/alphabet/RELEASE-TEMPLATE.md) describes the export and release requirements.
 

@@ -2,7 +2,18 @@
 
 Owner: **Osama**.
 
-No automated acceptance tests have been implemented or run for this baseline yet. Keep software checks separate from held-out recognition evaluation.
+The browser demo has software checks for hand cropping, stability filtering,
+no-hand handling, and clearing old votes after a pause. Run them from the
+repository root with the alphabet and MediaPipe dependencies installed:
+
+```bash
+python -m unittest ml.alphabet.tests.test_browser_demo -v
+```
+
+The classifier and hand detector are stubbed in these tests; they do not measure
+recognition accuracy. Automated acceptance evidence for the trained baseline
+remains to be implemented. Keep software checks separate from held-out
+recognition evaluation.
 
 ## Planned acceptance evidence
 

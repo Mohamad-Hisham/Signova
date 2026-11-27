@@ -41,6 +41,34 @@ The score is an uncalibrated model score. The separate webcam hand-crop experime
 
 Optional camera dependencies are listed in `requirements-webcam.in`; install them in a clean environment to avoid conflicting OpenCV wheels. This optional environment has not been clean-install verified.
 
+## Browser webcam demo (including WSL)
+
+From the repository root, activate your alphabet environment and run:
+
+```bash
+source .venv/bin/activate
+python -m ml.alphabet.src.browser_demo
+```
+
+Open **http://localhost:8765** in your Windows browser (Edge or Chrome), click
+**Start camera**, and allow camera access. The browser accesses the Windows
+camera and sends frames to the Python model in WSL, so `/dev/video0`, Windows
+Python, and USB camera forwarding are not required. Keep the terminal running;
+use **Stop camera** to release the webcam and **Ctrl+C** to stop the server.
+Use `--port 8766` if the default port is occupied, and open that port instead.
+
+The demo requires `torch`, `torchvision`, `Pillow`, `numpy`, and `mediapipe`,
+plus the existing `aasl31_best.pth` and `hand_landmarker.task` assets in
+`checkpoints/`. On Ubuntu, if MediaPipe reports a missing `libGLESv2.so.2`,
+install its system library with `sudo apt-get install -y libgles2`.
+
+The server listens on loopback only and processes frames in memory without
+saving them. It uses the same hand crop and exploratory stability thresholds
+as the native webcam experiment. Show one hand in good lighting and hold the
+sign steady for a few seconds. Arabic and Latin letter labels appear when the
+prediction stabilizes. Scores are uncalibrated, and browser/webcam accuracy has
+not been evaluated; the historical full-frame test scores do not apply to it.
+
 ## Source refactor commands
 
 The code refactor has not been run to reproduce the historical scores. From the repository root, after installing the dependencies, a new run can use the saved split manifest and a local dataset root:
