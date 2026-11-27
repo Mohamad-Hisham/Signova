@@ -1,18 +1,4 @@
-# Signova scaffold — documentation placeholder; no implementation.
-# Purpose: Reserve strict REST creation, capture, confirm, space, replacement, clear and end
-#   input schemas.
-# Owner: Ali.
-# Expected inputs: Untrusted documented request bodies/query/header identities.
-# Expected outputs: Future validated operation inputs or safe field-path validation errors.
-# Responsibilities: Forbid unknown fields, enforce nonboolean integers, UUID command headers,
-#   text/code-point and body limits.
-# Connections: api handlers, common.py and commands/transcript services.
-# Future implementation: Define Pydantic v2 request contracts with exact v1 field names.
-# Rules and limitations: Do not accept client score/source/label provenance, guessed revisions,
-#   mode changes or empty bodies on no-body routes.
-# Expected tests or acceptance: Missing/extra fields, duplicate/foreign IDs and malformed
-#   revisions return safe 422 before mutation; valid stale revisions use 409.
-
+"""Strict request bodies and response envelopes for the REST API."""
 
 from typing import Annotated, Literal
 from unicodedata import normalize
@@ -22,12 +8,22 @@ from pydantic import (
     BeforeValidator,
     ConfigDict,
     Field,
+    StrictBool,
     StrictInt,
 )
 
+from app.schemas.common import ModelMode, Session
+
+
+def normalize_rest_text(value: object) -> object:
+    if isinstance(value, str):
+        return normalize("NFC", value.replace("\r\n", "\n").replace("\r", "\n"))
+    return value
+
+
 NFCText = Annotated[
     str,
-    BeforeValidator(lambda value: normalize("NFC", value)),
+    BeforeValidator(normalize_rest_text),
     Field(min_length=1, max_length=2000),
 ]
 
@@ -37,14 +33,20 @@ class ConfiguredModel(BaseModel):
 
 
 class SessionCreateRequest(ConfiguredModel):
-    mode: Literal["alphabet", "word"]
-    recovery_enabled: bool = False
+    mode: ModelMode
+    recovery_enabled: StrictBool = False
 
 
 class CaptureRequest(ConfiguredModel):
     expected_revision: StrictInt = Field(ge=0)
     expected_state_version: StrictInt = Field(ge=0)
     action: Literal["start", "pause"]
+
+
+class ModeChangeRequest(ConfiguredModel):
+    mode: ModelMode
+    expected_revision: StrictInt = Field(ge=0)
+    expected_state_version: StrictInt = Field(ge=0)
 
 
 class ConfirmRequest(ConfiguredModel):
@@ -84,3 +86,15 @@ class VocabularyQuery(ConfiguredModel):
 class ExportQuery(ConfiguredModel):
     format: Literal["txt"]
     revision: StrictInt = Field(ge=0)
+
+
+class SessionResponse(ConfiguredModel):
+    session: Session
+
+
+class SessionCreatedResponse(SessionResponse):
+    session_token: str
+
+
+class ConfirmResponse(SessionResponse):
+    item_id: str

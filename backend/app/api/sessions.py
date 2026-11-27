@@ -1,95 +1,86 @@
-# Signova scaffold — documentation placeholder; no implementation.
-# Purpose: Reserve REST create/read/capture/confirm/space/end/delete session boundaries.
-# Owner: Ali.
-# Expected inputs: Validated body/headers, per-session bearer capability and service results.
-# Expected outputs: Future exact statuses, one-time token and canonical session
-#   snapshots/item_id.
-# Responsibilities: Delegate authority, locking, deadline and command identity to services;
-#   preserve no-body delete semantics.
-# Connections: schemas, services/sessions.py, commands.py, recognition.py and transcript.py.
-# Future implementation: Implement the documented existing routes without new account/auth
-#   infrastructure.
-# Rules and limitations: No model inference/training in routes, alternate mode aliases, public
-#   listing or token in read responses.
-# Expected tests or acceptance: All session routes enforce access/expiry/state/revision;
-#   deletion replay/tombstone edges await documented resolution.
+"""Session lifecycle and recognition commands."""
 
-from fastapi import APIRouter, Header, Request
-from fastapi.responses import JSONResponse
+from datetime import timedelta
+from typing import Annotated
 
+from fastapi import APIRouter, Header, Request, Response
+
+from app.api.session_access import (
+    Authorization,
+    check_session_current,
+    execute_session_command,
+    rate_limited,
+    require_command_id,
+    require_session,
+    session_access_error,
+)
+from app.schemas.common import ErrorEnvelope
 from app.schemas.rest import (
     CaptureRequest,
     ConfirmRequest,
+    ConfirmResponse,
+    EndRequest,
+    ModeChangeRequest,
+    SessionCreatedResponse,
     SessionCreateRequest,
+    SessionResponse,
 )
-from app.services.commands import (
-    IdempotencyConflict,
-    RevisionConflict,
-    StateConflict,
-    check_revision,
-    check_state_version,
-)
+from app.services.commands import check_revision, check_state_version
 from app.services.recognition import StaleStreamError
 from app.services.sessions import (
+    SessionDeleted,
     SessionExpired,
     SessionLimitExceeded,
     SessionNotFound,
+    SessionRecord,
+    SessionStore,
 )
 from app.services.transcript import (
     TranscriptLimitExceeded,
     append_model_item,
     derive_text,
+    public_transcript_items,
 )
-from app.utilities.errors import build_error
-from app.utilities.ids import validate_uuid
+from app.utilities.errors import ApiError
 from app.utilities.time import utc_now
 
 router = APIRouter(prefix="/api/v1/sessions", tags=["sessions"])
+CommandKey = Annotated[str | None, Header(alias="Idempotency-Key")]
+VALIDATION_RESPONSE = {
+    413: {"model": ErrorEnvelope, "description": "Request body too large"},
+    422: {"model": ErrorEnvelope, "description": "Invalid request"},
+}
+ACCESS_RESPONSES = {
+    401: {"model": ErrorEnvelope, "description": "Session capability required"},
+    404: {"model": ErrorEnvelope, "description": "Session unavailable"},
+    410: {"model": ErrorEnvelope, "description": "Session deleted or expired"},
+}
+MUTATION_RESPONSES = {
+    **ACCESS_RESPONSES,
+    **VALIDATION_RESPONSE,
+    409: {"model": ErrorEnvelope, "description": "Session or command conflict"},
+    429: {"model": ErrorEnvelope, "description": "Request limit reached"},
+}
+MODEL_RESPONSE = {
+    503: {"model": ErrorEnvelope, "description": "Selected model unavailable"}
+}
 
 
-def bearer_token(authorization: str | None) -> str | None:
-    if authorization is None:
-        return None
-    scheme, _, token = authorization.partition(" ")
-    if scheme.lower() != "bearer" or not token:
-        return None
-    return token
-
-
-def snapshot(record, store) -> dict:
-    if record.absolute_deadline < record.idle_deadline:
-        remaining = record.absolute_deadline - store.clock.now_monotonic()
-    else:
-        remaining = record.idle_deadline - store.clock.now_monotonic()
-
+def snapshot(record: SessionRecord, store: SessionStore) -> dict:
+    deadline, _ = store.deadline(record)
+    monotonic_now = store.clock.now_monotonic()
     now = utc_now()
-    expires_at = now.fromtimestamp(
-        now.timestamp() + max(0.0, remaining),
-        tz=now.tzinfo,
+    expires_at = now + timedelta(seconds=max(0.0, deadline - monotonic_now))
+    absolute_expires_at = now + timedelta(
+        seconds=max(0.0, record.absolute_deadline - monotonic_now)
     )
-    absolute_remaining = max(
-        0.0,
-        record.absolute_deadline - store.clock.now_monotonic(),
-    )
-    absolute_expires_at = now.fromtimestamp(
-        now.timestamp() + absolute_remaining,
-        tz=now.tzinfo,
-    )
-
-    items = record.items
-    text = derive_text(record.mode, items)
-    updated_at = record.updated_at or now
-
     return {
         "session_id": record.session_id,
         "mode": record.mode,
         "status": record.status,
         "state_version": record.state_version,
         "expires_at": expires_at.isoformat().replace("+00:00", "Z"),
-        "absolute_expires_at": absolute_expires_at.isoformat().replace(
-            "+00:00",
-            "Z",
-        ),
+        "absolute_expires_at": absolute_expires_at.isoformat().replace("+00:00", "Z"),
         "idle_timeout_seconds": store.idle_timeout_seconds,
         "reconnect_grace_seconds": store.reconnect_grace_seconds,
         "model_version": record.model_version,
@@ -97,304 +88,303 @@ def snapshot(record, store) -> dict:
         "recovery_enabled": record.recovery_enabled,
         "transcript": {
             "revision": record.transcript_revision,
-            "items": items,
-            "text": text,
-            "updated_at": updated_at.isoformat().replace("+00:00", "Z"),
+            "items": public_transcript_items(record.items),
+            "text": derive_text(record.mode, record.items),
+            "updated_at": record.updated_at.isoformat().replace("+00:00", "Z"),
         },
     }
 
 
-@router.post("", status_code=201)
-async def create_session(request: Request, body: SessionCreateRequest):
-    registry = request.app.state.adapter_registry
-    if not registry.readiness().get(body.mode, False):
-        error = build_error(
+def _adapter(request: Request, mode: str):
+    try:
+        return request.app.state.adapter_registry.get(mode)
+    except KeyError as exc:
+        raise ApiError(
+            503,
             "MODEL_UNAVAILABLE",
             "This recognition mode is unavailable.",
             retryable=True,
-        )
-        return JSONResponse(status_code=503, content=error.model_dump())
+        ) from exc
 
+
+def _state_response(request: Request, record: SessionRecord, reason: str) -> dict:
+    state = request.app.state
+    result = {"session": snapshot(record, state.session_store)}
+    state.live.publish(
+        record,
+        "session.state",
+        {**result, "reason": reason},
+        discard_pending=reason in {"pause", "mode_changed", "limit"},
+    )
+    return result
+
+
+def _pause(request: Request, record: SessionRecord) -> None:
+    if record.stream_id is not None:
+        request.app.state.recognition_service.invalidate_stream(record.stream_id)
+    record.stream_id = None
+    record.status = "paused"
+    record.state_version += 1
+
+
+@router.post(
+    "",
+    status_code=201,
+    response_model=SessionCreatedResponse,
+    responses={
+        **VALIDATION_RESPONSE,
+        **MODEL_RESPONSE,
+        429: {"model": ErrorEnvelope, "description": "Capacity or rate limit reached"},
+    },
+)
+async def create_session(request: Request, body: SessionCreateRequest):
+    """Create a paused session for a ready recognition mode."""
+    state = request.app.state
+    source = request.client.host if request.client else "unknown"
+    retry_after = state.creation_rate.take(source)
+    if retry_after is not None:
+        raise rate_limited(retry_after)
+
+    adapter = _adapter(request, body.mode)
     try:
-        record, token = request.app.state.session_store.create(
+        record, token = state.session_store.create(
             body.mode,
+            model_version=adapter.model_version,
             recovery_enabled=body.recovery_enabled,
         )
-    except SessionLimitExceeded:
-        error = build_error(
+    except SessionLimitExceeded as exc:
+        raise ApiError(
+            429,
             "SESSION_LIMIT",
             "The server has reached its session capacity.",
             retryable=True,
-        )
-        return JSONResponse(status_code=429, content=error.model_dump())
+            headers={"Retry-After": str(state.settings.sweep_interval_seconds)},
+        ) from exc
 
-    return JSONResponse(
-        status_code=201,
-        content={
-            "session_token": token,
-            "session": snapshot(
-                record,
-                request.app.state.session_store,
-            ),
-        },
-    )
+    return {"session": snapshot(record, state.session_store), "session_token": token}
 
 
-@router.get("/{session_id}")
+@router.get(
+    "/{session_id}",
+    response_model=SessionResponse,
+    responses={**ACCESS_RESPONSES, **VALIDATION_RESPONSE},
+)
 async def read_session(
-    request: Request,
-    session_id: str,
-    authorization: str | None = Header(default=None),
+    request: Request, session_id: str, authorization: Authorization = None
 ):
-    token = bearer_token(authorization)
-    if token is None:
-        error = build_error(
-            "CREDENTIAL_REQUIRED",
-            "A bearer capability is required.",
-        )
-        return JSONResponse(status_code=401, content=error.model_dump())
-
-    try:
-        record = request.app.state.session_store.authenticate(
-            session_id,
-            token,
-        )
-    except (SessionNotFound, SessionExpired):
-        error = build_error(
-            "SESSION_NOT_FOUND",
-            "The requested session was not found.",
-        )
-        return JSONResponse(status_code=404, content=error.model_dump())
-
-    return {"session": snapshot(record, request.app.state.session_store)}
+    record = require_session(request, session_id, authorization)
+    async with record.lock:
+        check_session_current(request, record)
+        return {"session": snapshot(record, request.app.state.session_store)}
 
 
-@router.post("/{session_id}/capture")
+@router.post(
+    "/{session_id}/capture",
+    response_model=SessionResponse,
+    responses={**MUTATION_RESPONSES, **MODEL_RESPONSE},
+)
 async def capture_session(
     request: Request,
     session_id: str,
     body: CaptureRequest,
-    authorization: str | None = Header(default=None),
-    idempotency_key: str | None = Header(
-        default=None,
-        alias="Idempotency-Key",
-    ),
+    authorization: Authorization = None,
+    idempotency_key: CommandKey = None,
 ):
-    token = bearer_token(authorization)
-    if token is None:
-        error = build_error(
-            "CREDENTIAL_REQUIRED",
-            "A bearer capability is required.",
-        )
-        return JSONResponse(status_code=401, content=error.model_dump())
-    if idempotency_key is None:
-        error = build_error(
-            "VALIDATION_ERROR",
-            "An Idempotency-Key header is required.",
-        )
-        return JSONResponse(status_code=422, content=error.model_dump())
+    record = require_session(request, session_id, authorization)
+    command_id = require_command_id(idempotency_key)
+    state = request.app.state
 
-    try:
-        command_id = validate_uuid(idempotency_key)
-    except (ValueError, AttributeError):
-        error = build_error(
-            "VALIDATION_ERROR",
-            "Idempotency-Key must be a canonical UUID.",
-        )
-        return JSONResponse(status_code=422, content=error.model_dump())
+    def operation() -> dict:
+        check_revision(record, body.expected_revision)
+        check_state_version(record, body.expected_state_version)
+        if body.action == "start":
+            if record.socket_id is None:
+                raise ApiError(
+                    409, "SOCKET_REQUIRED", "Connect the live socket before starting."
+                )
+            if record.status == "capturing":
+                raise ApiError(409, "ALREADY_CAPTURING", "Capture is already active.")
+            _adapter(request, record.mode)
+            record.stream_id = state.recognition_service.start_stream(
+                record.mode
+            ).stream_id
+            record.status = "capturing"
+            record.state_version += 1
+        else:
+            if record.status != "capturing":
+                return {"session": snapshot(record, state.session_store)}
+            _pause(request, record)
 
-    try:
-        record = request.app.state.session_store.authenticate(
-            session_id,
-            token,
-        )
-    except (SessionNotFound, SessionExpired):
-        error = build_error(
-            "SESSION_NOT_FOUND",
-            "The requested session was not found.",
-        )
-        return JSONResponse(status_code=404, content=error.model_dump())
-
-    fingerprint = f"POST /api/v1/sessions/{session_id}/capture|{body.model_dump_json()}"
+        state.session_store.touch_idle(record)
+        return _state_response(request, record, body.action)
 
     async with record.lock:
-
-        def operation():
-            check_revision(record, body.expected_revision)
-            check_state_version(record, body.expected_state_version)
-
-            if record.status == "ended":
-                raise ValueError("SESSION_ENDED")
-
-            if body.action == "start":
-                if record.status == "capturing":
-                    raise ValueError("ALREADY_CAPTURING")
-                if record.stream_id is not None:
-                    raise ValueError("STALE_STREAM")
-                stream = request.app.state.recognition_service.start_stream(record.mode)
-                record.status = "capturing"
-                record.stream_id = stream.stream_id
-                record.state_version += 1
-            else:
-                if record.status != "capturing":
-                    raise ValueError("PAUSE_NOT_CAPTURING")
-                if record.stream_id is not None:
-                    request.app.state.recognition_service.invalidate_stream(
-                        record.stream_id
-                    )
-                record.status = "paused"
-                record.stream_id = None
-                record.state_version += 1
-
-            record.updated_at = utc_now()
-            request.app.state.session_store.touch_idle(record)
-            return snapshot(record, request.app.state.session_store)
-
-        try:
-            result = record.command_cache.execute(command_id, fingerprint, operation)
-        except IdempotencyConflict:
-            error = build_error(
-                "IDEMPOTENCY_CONFLICT",
-                "This command ID was used for a different request.",
-                retryable=False,
-            )
-            return JSONResponse(status_code=409, content=error.model_dump())
-        except RevisionConflict:
-            error = build_error(
-                "REVISION_CONFLICT",
-                "Refresh the session before retrying.",
-                details={"current_revision": record.transcript_revision},
-            )
-            return JSONResponse(status_code=409, content=error.model_dump())
-        except StateConflict:
-            error = build_error(
-                "STATE_CONFLICT",
-                "Capture status changed. Refresh and retry.",
-                details={"current_state_version": record.state_version},
-            )
-            return JSONResponse(status_code=409, content=error.model_dump())
-        except ValueError as exc:
-            code = str(exc)
-            error = build_error(
-                code,
-                "The capture action is not valid in the current state.",
-                retryable=False,
-            )
-            return JSONResponse(status_code=409, content=error.model_dump())
-
-    return {"session": result}
+        return execute_session_command(request, record, command_id, body, operation)
 
 
-@router.post("/{session_id}/confirm")
+@router.post(
+    "/{session_id}/mode",
+    response_model=SessionResponse,
+    responses={**MUTATION_RESPONSES, **MODEL_RESPONSE},
+)
+async def change_session_mode(
+    request: Request,
+    session_id: str,
+    body: ModeChangeRequest,
+    authorization: Authorization = None,
+    idempotency_key: CommandKey = None,
+):
+    """Change the active recognition mode while retaining the session and transcript."""
+    record = require_session(request, session_id, authorization)
+    command_id = require_command_id(idempotency_key)
+    state = request.app.state
+
+    def operation() -> dict:
+        check_revision(record, body.expected_revision)
+        check_state_version(record, body.expected_state_version)
+        if record.mode == body.mode:
+            return {"session": snapshot(record, state.session_store)}
+
+        adapter = _adapter(request, body.mode)
+        recognition = state.recognition_service
+        new_stream_id = None
+        if record.status == "capturing":
+            new_stream_id = recognition.start_stream(body.mode).stream_id
+        if record.stream_id is not None:
+            recognition.invalidate_stream(record.stream_id)
+
+        record.mode = body.mode
+        record.model_version = adapter.model_version
+        record.stream_id = new_stream_id
+        record.state_version += 1
+        state.session_store.touch_idle(record)
+        return _state_response(request, record, "mode_changed")
+
+    async with record.lock:
+        return execute_session_command(request, record, command_id, body, operation)
+
+
+@router.post(
+    "/{session_id}/confirm",
+    response_model=ConfirmResponse,
+    responses=MUTATION_RESPONSES,
+)
 async def confirm_session(
     request: Request,
     session_id: str,
     body: ConfirmRequest,
-    authorization: str | None = Header(default=None),
-    idempotency_key: str | None = Header(
-        default=None,
-        alias="Idempotency-Key",
-    ),
+    authorization: Authorization = None,
+    idempotency_key: CommandKey = None,
 ):
-    token = bearer_token(authorization)
-    if token is None:
-        error = build_error(
-            "CREDENTIAL_REQUIRED",
-            "A bearer capability is required.",
-        )
-        return JSONResponse(status_code=401, content=error.model_dump())
-    if idempotency_key is None:
-        error = build_error(
-            "VALIDATION_ERROR",
-            "An Idempotency-Key header is required.",
-        )
-        return JSONResponse(status_code=422, content=error.model_dump())
+    record = require_session(request, session_id, authorization)
+    command_id = require_command_id(idempotency_key)
+    state = request.app.state
 
-    try:
-        command_id = validate_uuid(idempotency_key)
-    except (ValueError, AttributeError):
-        error = build_error(
-            "VALIDATION_ERROR",
-            "Idempotency-Key must be a canonical UUID.",
-        )
-        return JSONResponse(status_code=422, content=error.model_dump())
-
-    try:
-        record = request.app.state.session_store.authenticate(
-            session_id,
-            token,
-        )
-    except (SessionNotFound, SessionExpired):
-        error = build_error(
-            "SESSION_NOT_FOUND",
-            "The requested session was not found.",
-        )
-        return JSONResponse(status_code=404, content=error.model_dump())
-
-    fingerprint = f"POST /api/v1/sessions/{session_id}/confirm|{body.model_dump_json()}"
-
-    async with record.lock:
-
-        def operation():
-            check_revision(record, body.expected_revision)
-
-            if record.status != "capturing":
-                raise ValueError("CANDIDATE_UNAVAILABLE")
-            if record.stream_id != body.stream_id:
-                raise StaleStreamError
-
-            prediction = request.app.state.recognition_service.consume_candidate(
-                body.stream_id,
-                body.candidate_id,
+    def operation() -> dict:
+        check_revision(record, body.expected_revision)
+        if record.stream_id != body.stream_id:
+            raise ApiError(409, "STALE_STREAM", "The capture stream has changed.")
+        if record.status != "capturing":
+            raise ApiError(
+                409, "CANDIDATE_UNAVAILABLE", "The candidate is unavailable."
             )
-            kind = "word" if record.mode == "word" else "letter"
-            item = append_model_item(
+
+        def append(prediction):
+            return append_model_item(
                 record,
-                text=prediction.text or "",
-                kind=kind,
-                label_id=prediction.label_id or "",
+                text=prediction.text,
+                kind="word" if record.mode == "word" else "letter",
+                label_id=prediction.label_id,
                 score=prediction.score,
                 model_version=prediction.model_version,
                 confirmed_by="manual",
             )
-            return {
-                "session": snapshot(
-                    record,
-                    request.app.state.session_store,
-                ),
-                "item_id": item["item_id"],
-            }
 
         try:
-            result = record.command_cache.execute(
-                command_id,
-                fingerprint,
-                operation,
+            item = state.recognition_service.commit_candidate(
+                body.stream_id, body.candidate_id, append
             )
-        except IdempotencyConflict:
-            error = build_error(
-                "IDEMPOTENCY_CONFLICT",
-                "This command ID was used for a different request.",
-            )
-            return JSONResponse(status_code=409, content=error.model_dump())
-        except RevisionConflict:
-            error = build_error(
-                "REVISION_CONFLICT",
-                "Refresh the session before retrying.",
-                details={"current_revision": record.transcript_revision},
-            )
-            return JSONResponse(status_code=409, content=error.model_dump())
-        except (StaleStreamError, ValueError):
-            error = build_error(
-                "CANDIDATE_UNAVAILABLE",
-                "The candidate or stream is no longer available.",
-            )
-            return JSONResponse(status_code=409, content=error.model_dump())
-        except TranscriptLimitExceeded:
-            error = build_error(
-                "TRANSCRIPT_LIMIT",
-                "The transcript limit would be exceeded.",
-            )
-            return JSONResponse(status_code=409, content=error.model_dump())
+        except StaleStreamError as exc:
+            raise ApiError(
+                409, "CANDIDATE_UNAVAILABLE", "The candidate is unavailable."
+            ) from exc
+        except TranscriptLimitExceeded as exc:
+            _pause(request, record)
+            _state_response(request, record, "limit")
+            raise ApiError(
+                409, "TRANSCRIPT_LIMIT", "The transcript limit would be exceeded."
+            ) from exc
 
-    return result
+        state.session_store.touch_idle(record)
+        session = snapshot(record, state.session_store)
+        state.live.publish(
+            record,
+            "transcript.updated",
+            {
+                "session": session,
+                "cause": "commit",
+                "command_id": command_id,
+                "committed_item_id": item["item_id"],
+            },
+        )
+        state.live.publish(record, "candidate.updated", {"candidate": None})
+        return {"session": session, "item_id": item["item_id"]}
+
+    async with record.lock:
+        return execute_session_command(request, record, command_id, body, operation)
+
+
+@router.post(
+    "/{session_id}/end", response_model=SessionResponse, responses=MUTATION_RESPONSES
+)
+async def end_session(
+    request: Request,
+    session_id: str,
+    body: EndRequest,
+    authorization: Authorization = None,
+    idempotency_key: CommandKey = None,
+):
+    record = require_session(request, session_id, authorization)
+    command_id = require_command_id(idempotency_key)
+    state = request.app.state
+
+    def operation() -> dict:
+        check_revision(record, body.expected_revision)
+        if record.stream_id is not None:
+            state.recognition_service.invalidate_stream(record.stream_id)
+        state.session_store.mark_ended(record)
+        result = {"session": snapshot(record, state.session_store)}
+        state.live.publish(
+            record,
+            "session.ended",
+            {**result, "reason": "user"},
+            discard_pending=True,
+            close_code=1000,
+        )
+        return result
+
+    async with record.lock:
+        return execute_session_command(
+            request, record, command_id, body, operation, allow_ended_replay=True
+        )
+
+
+@router.delete(
+    "/{session_id}",
+    status_code=204,
+    responses={**ACCESS_RESPONSES, **VALIDATION_RESPONSE},
+)
+async def delete_session(
+    request: Request, session_id: str, authorization: Authorization = None
+):
+    try:
+        record = require_session(request, session_id, authorization)
+        async with record.lock:
+            try:
+                request.app.state.session_store.delete(record)
+            except (SessionDeleted, SessionExpired, SessionNotFound) as exc:
+                raise session_access_error(exc) from exc
+    except ApiError as exc:
+        if exc.envelope.error.code != "SESSION_DELETED":
+            raise
+    return Response(status_code=204)

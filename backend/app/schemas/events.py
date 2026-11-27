@@ -46,7 +46,7 @@ class FrameMessage(ConfiguredWebSocketModel):
     width: StrictInt = Field(gt=0, le=640)
     height: StrictInt = Field(gt=0, le=480)
     mirrored: Literal[False]
-    image_b64: str = Field(min_length=1, max_length=218_454)
+    image_b64: str = Field(min_length=1, max_length=218_456)
 
 
 class PingMessage(ConfiguredWebSocketModel):

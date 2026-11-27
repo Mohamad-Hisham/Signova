@@ -1,6 +1,6 @@
 # Signova live WebSocket protocol v1
 
-Owner: Ali; consumer/reviewer: Adham. Sources: Ali §§10/15–19/23–26; Adham §§11–13/16–20/25. No handler or transport is implemented. Endpoint: **`/api/v1/ws/sessions/{sid}`**. Use `wss` for deployment, `ws` only for localhost development. Capabilities never go in URLs or query parameters.
+Owner: Ali. Adham reviews client integration. Connect to **`/api/v1/ws/sessions/{sid}`** using `wss` for deployment or `ws` for localhost development. Send the capability in the first authentication message.
 
 ## Connection and authentication
 
@@ -10,7 +10,7 @@ Reply `session.ready` with a full snapshot and confirmation policy. Reconnection
 
 ## Client objects
 
-Each includes `protocol_version:1` and `type`. Unknown keys or message types are rejected. Only these three types exist; binary frames are unsupported. Start, Pause, Confirm, Space, replace, Clear and End use REST.
+Each includes `protocol_version:1` and `type`. Unknown keys, unknown message types, and binary frames are rejected. Start, Pause, mode changes, Confirm, Space, replace, Clear and End use REST.
 
 | `type` | Other fields | Meaning and expected response |
 |---|---|---|
@@ -29,7 +29,7 @@ Every server message requires `protocol_version:1`, `type:string`, `event_id:str
 | `type` | Exact `data` fields | Required frontend effect |
 |---|---|---|
 | `session.ready` | `session:Session`, `confirmation_policy:manual\|automatic_with_manual_fallback` | Accept full paused snapshot; wait for explicit Start |
-| `session.state` | `session:Session`, `reason:start\|pause\|limit` | Merge text revision/capture version independently; stop sending if not capturing |
+| `session.state` | `session:Session`, `reason:start\|pause\|limit\|mode_changed` | Merge revision and state version independently. For a new stream, clear the old preview and restart numbering at 1. Stop sending when capture is inactive. |
 | `frame.ack` | `stream_id:string`, `frame_seq:int`, `outcome:processed\|discarded`, `reason:string\|null`, `processing_ms:finite number≥0` | Release only the matching outstanding stream/sequence slot; processed is not recognition or confirmation |
 | `candidate.updated` | `candidate:Candidate\|null` | Preview only for active stream while capturing; null clears preview; never append transcript |
 | `transcript.updated` | `session:Session`, `cause:commit\|replace\|clear\|space`, `command_id:string\|null`, `committed_item_id:string\|null` | Apply canonical transcript once by revision/item identity; automatic commit command_id is null |
@@ -50,7 +50,9 @@ Server: one bounded pending sample, one current owner-approved temporal window, 
 
 Control/snapshot events are reliable within a live connection; previews may be coalesced. If bounded writer delivery cannot keep up, close 1013 and recover by full snapshot. No persistent replay log exists. Never block every session waiting for an outbound writer or native inference under a session lock.
 
-Pause/Clear/disconnect/End/deletion/expiry invalidate the generation, drop pending recognition and discard late model results. Pause is not word completion. Confirm must succeed before Pause in the manual fallback. On failure Adham stops tracks and sampling, discards candidate and reconnects approximately 1, 2, 4, 8 seconds then ≤15 seconds with jitter, only for a nonterminal live session. After 45 seconds without valid messages/pong treat the link as failed. Heartbeats run every 15 seconds. Reconnect grace initially 120 seconds; no auto-resume or frame replay.
+Pause, Clear, disconnect, End, deletion, and expiry invalidate the generation, drop pending recognition, and discard late results. Confirm must succeed before Pause in the manual fallback. On failure, stop tracks and sampling, discard the candidate, and reconnect with jitter for a nonterminal session. Treat 45 seconds without valid messages as a failed link. Heartbeats run every 15 seconds and reconnect grace starts at 120 seconds.
+
+A successful mode switch replaces the active stream and discards queued recognition from its predecessor. The writer sends a full `session.state` snapshot on the same connection. Match acknowledgements to the current stream and frame sequence so a late event from the previous stream leaves the current frame untouched.
 
 ## Close codes
 

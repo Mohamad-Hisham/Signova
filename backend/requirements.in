@@ -15,6 +15,7 @@
 #   Python/platform/hardware before compatibility is claimed.
 
 
+anyio
 fastapi
 uvicorn[standard]
 pydantic>=2,<3

@@ -1,6 +1,6 @@
 # Signova: start here
 
-Signova will recognize supported Arabic Sign Language letters and isolated words from a webcam and display Arabic and approved English equivalents. Application source is still a comment-only scaffold and cannot run, build, infer or train yet. Repository CI/checker tooling has been implemented under a later authorized task and needs no project dependencies. No application dependencies or usable application lockfiles have been installed or generated.
+Signova targets Arabic Sign Language letters and isolated words from a webcam. The FastAPI backend runs with the local alphabet checkpoint and exposes REST and live WebSocket routes. Word recognition and the React frontend are pending. [Run and test the backend](backend/README.md)
 
 The existing root README, license, five handbooks, and Excalidraw board are preserved byte for byte. This entry point provides the detailed onboarding that would normally live in the root README. The current workspace is already the repository root; no second nested `signova/` repository is created.
 
@@ -8,7 +8,7 @@ The existing root README, license, five handbooks, and Excalidraw board are pres
 
 Read [the system overview](docs/architecture/system-overview.md), [runtime flows](docs/architecture/runtime-data-flow.md), and [ownership](docs/team/ownership.md). Then read your module README and the relevant contracts under [docs/contracts](docs/contracts/README.md). Coordinate unresolved interface or scope decisions with Hisham and the affected owners.
 
-One React/TypeScript/Vite frontend communicates through native Fetch and WebSocket with one Python 3.11-target FastAPI backend. The backend loads independent alphabet and word packages through dedicated adapters. Basil's offline data releases feed the two model owners; approved versioned model releases reach the backend team through external artifact storage. These are modules in one monorepo, not microservices.
+The React/TypeScript/Vite frontend will communicate by HTTP and WebSocket with one FastAPI backend. The backend selects independent adapters for alphabet and word recognition, with alphabet available from the local checkpoint. Model releases reach the backend team through external artifact storage.
 
 The live path is browser camera → bounded unmirrored JPEG samples → authenticated WebSocket → validation and server preprocessing → selected adapter → candidate preview → explicit confirmation → authoritative RAM transcript → browser snapshot. Automatic word completion requires evaluated release evidence and joint acceptance. Pause discards pending evidence; it never classifies a final buffered clip.
 
@@ -37,7 +37,7 @@ Active sessions and confirmed transcripts exist temporarily in backend RAM. The 
 |---|---|
 | `docs/` | Architecture, exact REST/WebSocket contracts, model/data/vocabulary boundaries, decisions, team handoffs and runbooks |
 | `frontend/` | Comment-only React/TypeScript/camera/network placeholders; minimal package metadata and empty valid TypeScript config |
-| `backend/` | Comment-only FastAPI schema/route/service/adapter placeholders and dependency planning notes |
+| `backend/` | FastAPI routes, session services, live transport, alphabet adapter, and tests |
 | `ml/` | Independent alphabet/word training, evaluation, prediction and export placeholders; narrowly scoped shared documentation |
 | `data/` | Offline engineering metadata and script placeholders; ignored local payload areas |
 | `artifacts/` | Model-release requirements, cards and external release references; no weights or fake releases |
@@ -48,4 +48,4 @@ See the [complete repository tree](docs/architecture/repository-tree.md), [every
 
 Final project deadline: **December 1, 2026**. Weekly meeting: Tuesday, **10:00 PM or 11:00 PM Cairo time**, exact start TBD. Historical handbook schedules are planning references, not evidence of completed work. Hisham must reconcile conflicting intermediate dates.
 
-Application implementation requires a separately assigned task. Repository CI checks branch pushes, PR merge revisions targeting main and pushes to main after merging. Follow the [local checks and GitHub smoke tests](docs/runbooks/continuous-integration.md) before relying on the check. No application implementation, build, deployment, commit or push was performed by the CI authoring task.
+Repository CI checks branch pushes, PR merge revisions targeting main, and pushes to main after merging. See the [local checks and GitHub smoke tests](docs/runbooks/continuous-integration.md).

@@ -1,26 +1,27 @@
-# Signova scaffold — documentation placeholder; no implementation.
-# Purpose: Reserve public /api/v1/health/live and /health/ready REST boundaries.
 # Owner: Ali.
-# Expected inputs: Application liveness and trusted per-mode startup/golden readiness state.
-# Expected outputs: Future alive 200 or ready 200/503 with documented non-error readiness shape.
-# Responsibilities: Keep process liveness separate from release-required model availability
-#   without invoking inference per health request.
-# Connections: main lifecycle, config release-required modes and model registry readiness.
-# Future implementation: Implement thin route serialization during backend work.
-# Rules and limitations: No artifact filesystem paths, secrets, fake substitutions or model
-#   computation in liveness.
-# Expected tests or acceptance: Unready required mode returns 503 with
-#   ready/modes/required_modes; live can remain 200.
 
-from fastapi import APIRouter
+from typing import Literal
+
+from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
-from app.config import get_settings
+from app.schemas.common import ModelMode
 
 router = APIRouter(prefix="/api/v1/health", tags=["health"])
 
 
-@router.get("/live")
+class LivenessResponse(BaseModel):
+    status: Literal["alive"]
+
+
+class ReadinessResponse(BaseModel):
+    ready: bool
+    modes: dict[ModelMode, bool]
+    required_modes: list[ModelMode]
+
+
+@router.get("/live", response_model=LivenessResponse)
 async def live():
     """
     Liveness endpoint to check if the application is running.
@@ -29,21 +30,25 @@ async def live():
     return {"status": "alive"}
 
 
-@router.get("/ready")
-async def ready():
-    """
-    Readiness endpoint to check if the application is ready to serve requests.
-    Returns 200 OK if the application is ready, or 503 Service Unavailable if not.
-    """
-    # Placeholder for readiness logic: check if required modes are ready.
-    # In a real implementation, you would check the actual readiness state here.
-
-    settings = get_settings()
-    required_modes = list(settings.required_modes)
+@router.get(
+    "/ready",
+    response_model=ReadinessResponse,
+    responses={
+        503: {
+            "model": ReadinessResponse,
+            "description": "A required mode is unavailable.",
+        }
+    },
+)
+async def ready(request: Request):
+    """Report whether every required recognition mode is available."""
+    required_modes = request.app.state.settings.required_modes
+    modes = request.app.state.adapter_registry.readiness()
+    is_ready = all(modes[mode] for mode in required_modes)
     result = {
-        "ready": False,
-        "modes": {"alphabet": False, "word": False},
-        "required_modes": required_modes,
+        "ready": is_ready,
+        "modes": modes,
+        "required_modes": list(required_modes),
     }
 
-    return JSONResponse(status_code=503, content=result)
+    return JSONResponse(status_code=200 if is_ready else 503, content=result)
