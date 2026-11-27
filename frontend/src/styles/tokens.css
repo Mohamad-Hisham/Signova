@@ -1,16 +1,31 @@
-/*
- * Signova scaffold — documentation placeholder; no implementation.
- * Purpose: Reserve consistent accessible visual tokens for Signova UI.
- * Owner: Adham.
- * Expected inputs: Reviewed brand/layout/typography and contrast requirements.
- * Expected outputs: Future reusable color/spacing/type/focus token declarations.
- * Responsibilities: Support Arabic-capable typography, clear interactive states and readable
- *   responsive layouts.
- * Connections: global.css, shell, feature views and reusable components.
- * Future implementation: Define CSS custom properties only after visual implementation is
- *   assigned.
- * Rules and limitations: Currently comments only; no invented design tokens copied as validated
- *   accessibility evidence.
- * Expected tests or acceptance: Chosen colors/font sizes are checked for readability and
- *   contrast in actual implemented states.
- */
+:root {
+  --navy-950: #07111f;
+  --navy-900: #0b1728;
+  --navy-800: #12243a;
+  --teal-500: #22c7bd;
+  --teal-400: #55d8d0;
+  --teal-300: #86e8df;
+  --cyan-400: #54bcd9;
+  --orange-400: #ffad66;
+  --orange-500: #f79552;
+  --ink-900: #102033;
+  --ink-700: #35455a;
+  --ink-500: #68778a;
+  --cloud-50: #f7faf9;
+  --cloud-100: #edf3f1;
+  --cloud-200: #dce7e4;
+  --white: #ffffff;
+  --success: #29a58b;
+  --danger: #d95757;
+  --font-sans: "Inter", "Segoe UI", sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", "Segoe UI", sans-serif;
+  --shadow-sm: 0 8px 24px rgba(7, 17, 31, 0.08);
+  --shadow-md: 0 18px 50px rgba(7, 17, 31, 0.13);
+  --shadow-lg: 0 28px 80px rgba(7, 17, 31, 0.18);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --container: 1180px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

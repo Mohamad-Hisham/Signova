@@ -1,15 +1,75 @@
-/*
- * Signova scaffold — documentation placeholder; no implementation.
- * Purpose: Reserve global responsive, RTL/LTR, focus and plain-text layout behavior.
- * Owner: Adham.
- * Expected inputs: Approved tokens and semantic UI structure.
- * Expected outputs: Future readable Arabic transcript/editor and responsive application layout.
- * Responsibilities: Use logical spacing, visible focus, text wrapping and truthful video
- *   presentation.
- * Connections: tokens.css, App and all feature surfaces.
- * Future implementation: Implement global baseline and directional styles during frontend work.
- * Rules and limitations: Do not reverse stored strings, hide active camera state or style
- *   transmission bytes; comments only now.
- * Expected tests or acceptance: Mobile/portrait/200% zoom and mixed Arabic/Latin text stay
- *   readable without clipping core controls.
- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--cloud-50);
+  color: var(--ink-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(34, 199, 189, 0.38);
+  outline-offset: 3px;
+}
+
+.container {
+  width: min(calc(100% - 40px), var(--container));
+  margin-inline: auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
