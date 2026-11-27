@@ -1,16 +1,16 @@
 # Model packages and backend adapters
 
-Owner: Ali for the common adapter boundary; Osama for alphabet semantics; Bavly for word semantics; Basil for data/recipe lineage. Sources: Ali §§8–10, Osama §§3–4/11/22–25, Bavly §§4/10/22–24. This specification describes future interfaces; no classes, predictor functions, schemas or fake adapters are implemented.
+Ali owns the common adapter boundary, Osama owns alphabet semantics, Bavly owns word semantics, and Basil owns data and recipe lineage. The backend currently loads the local AASL31 alphabet adapter. The word mode requires its model release.
 
 ## Input boundary
 
-Adham sends only the documented v1 JPEG messages to Ali. Ali validates and decodes into RGB in memory, orders samples, owns bounded scheduling and chooses the adapter from immutable session mode. Models receive their approved numerical/decoded representation, not arbitrary browser JSON. Owners must specify exact tensor names, dtype, axes, shape, batch conventions, color, orientation, handedness, crop/pad/resize/interpolation, range, normalization, missing-evidence encoding and any training-fitted parameters. Every dimension is **TBD per model**; neither the image example nor a feature vector from the board is a universal input.
+The backend validates v1 JPEG messages in memory, orders samples, and schedules bounded inference on the adapter selected for the current stream. A mode change replaces the stream before the next frame reaches the target adapter. Model owners specify shape, color, orientation, handedness, crop, resize, normalization and any training-fitted parameters. Each adapter implements its model's own numerical representation.
 
 For temporal input, specify timestamps and units, required rate, window/length bounds, stride, sign/context placement, gap tolerance, ordering, padding/length masks, interior presence masks, warmup and reset behavior. Ali and Bavly must choose whether the word adapter receives decoded RGB frames/times or precomputed features; do not expose two conflicting public interfaces. Whole-window support, live-window support and automatic completion are independent capability statements. A clip-only predictor cannot become live-compatible just because the UI adds manual Confirm.
 
 ## Common evidence and normalization
 
-Ali's handbook proposes `preprocess(samples:list[bytes]) → array` and `predict(tensor) → Prediction`, with adapter `version`. Bavly proposes package-facing `load_model(package_dir)`, `reset_stream(stream_id)`, and `predict_window(frames_rgb,timestamps_ms,context)`. They describe different layers: the backend adapter wraps the owner package. Exact public callable signatures/reset context still require joint approval; no source interface is declared yet.
+The backend adapter accepts a bounded window through `predict(frames: list[bytes], times_ms: list[float])` and returns a `Prediction`. It exposes its public model version, label map, window size, and confirmation policy. `reset_stream(stream_id)` resets model-specific stream state before a fresh inference window. The alphabet adapter evaluates one JPEG per call and shares read-only model weights.
 
 | Shared internal field | Meaning |
 |---|---|

@@ -10,7 +10,7 @@ This package now records the executed AASL31 full-frame image-classification bas
 | `src/` | Dataset/split handling, training, evaluation, threshold analysis, hand-detection audit, prediction, and webcam experiment. |
 | `reports/` | Model card, run summary and aggregate evaluation evidence. |
 | `checkpoints/` | Local checkpoint and class map; ignored by Git and not for ordinary repository commits. |
-| `tests/` | Acceptance plan; implementation-specific tests remain to be added. |
+| `tests/` | Model acceptance plan and links to the backend adapter checks. |
 
 ## Current baseline
 
@@ -40,6 +40,14 @@ print(result["label"], result["arabic"], result["score"])
 The score is an uncalibrated model score. The separate webcam hand-crop experiment is in `src/webcam_experiment.py` and is not imported by this helper.
 
 Optional camera dependencies are listed in `requirements-webcam.in`; install them in a clean environment to avoid conflicting OpenCV wheels. This optional environment has not been clean-install verified.
+
+## Backend camera integration
+
+The [Signova backend](../../backend/README.md) runs the AASL31 checkpoint on
+camera JPEGs using the local hand detector and the existing evaluation
+transform. The adapter uses an experimental crop and score filter. It requires
+manual confirmation and has no verified webcam accuracy or neutral-sign
+recognition.
 
 ## Source refactor commands
 

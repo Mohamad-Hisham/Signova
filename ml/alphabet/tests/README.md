@@ -2,7 +2,9 @@
 
 Owner: **Osama**.
 
-No automated acceptance tests have been implemented or run for this baseline yet. Keep software checks separate from held-out recognition evaluation.
+The [backend alphabet adapter tests](../../../backend/tests/unit/test_alphabet_adapter.py)
+cover hand crop geometry, classifier decision logic, and startup and inference
+with the local checkpoint when both model assets are available.
 
 ## Planned acceptance evidence
 

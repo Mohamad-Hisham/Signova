@@ -43,6 +43,11 @@ class AlphabetPredictor:
         state_dict = checkpoint.get("model_state_dict")
         if not isinstance(class_to_idx, dict) or not state_dict:
             raise ValueError("Checkpoint is missing class_to_idx or model_state_dict")
+        if not class_to_idx or any(
+            not isinstance(label, str) or not label or type(index) is not int
+            for label, index in class_to_idx.items()
+        ):
+            raise ValueError("Checkpoint requires nonempty labels and integer class indices")
 
         ordered = sorted(class_to_idx.items(), key=lambda item: item[1])
         indices = [index for _, index in ordered]
@@ -55,10 +60,17 @@ class AlphabetPredictor:
         self.model.to(self.device).eval()
 
     @torch.inference_mode()
+    def probabilities(self, image: Image.Image) -> torch.Tensor:
+        """Return finite probabilities in checkpoint class order."""
+        tensor = self.transform(as_rgb(image)).unsqueeze(0).to(self.device)
+        logits = self.model(tensor)
+        if logits.shape != (1, len(self.classes)) or not torch.isfinite(logits).all():
+            raise ValueError("Alphabet model must return one finite logit per class")
+        return torch.softmax(logits[0], dim=0)
+
     def predict(self, image: Image.Image) -> dict:
         """Return the top class and its uncalibrated softmax model score."""
-        tensor = self.transform(as_rgb(image)).unsqueeze(0).to(self.device)
-        probabilities = torch.softmax(self.model(tensor)[0], dim=0)
+        probabilities = self.probabilities(image)
         index = int(probabilities.argmax().item())
         label = self.classes[index]
         return {
